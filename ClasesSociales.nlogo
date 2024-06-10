@@ -3,8 +3,16 @@ globals [
 ]
 
 patches-own [
-  living?         ;; indicates if the cell is living
-  live-neighbors  ;; counts how many neighboring cells are alive
+  living?         ;; indica si la celula está viva
+  baja?           ;; indica si la celula es de clase baja
+  media?          ;; indica si la celula es de clase media
+  alta?           ;; indica si la celula es de clase alta
+  colegio?        ;; indica si la celula es un colegio
+  hospital?       ;; indica si la celula es un hospital
+  industria?      ;; indica si la celula es una industria
+  parqueRecreativo? ;; indica si la celula es un parque recreativo
+  centro?         ;; indica si la celula es el centro
+  live-neighbors  ;; cuantas celulas vecinas estan vivas
 ]
 
 to setup-blank
@@ -96,7 +104,7 @@ to go
   ;; so the births and deaths at each generation all happen in lockstep.
   ask patches
     [ ifelse live-neighbors = 3
-      [ cell-birth ]
+      [ cell-alta ]
       [ if live-neighbors != 2
         [ cell-death ] ] ]
   tick
@@ -111,7 +119,7 @@ to draw-cells
       ifelse erasing? [
         cell-death
       ] [
-        cell-birth
+        cell-alta
       ]
     ]
     display
@@ -120,9 +128,6 @@ to draw-cells
   ]
 end
 
-
-; Copyright 1998 Uri Wilensky.
-; See Info tab for full copyright and license.
 @#$#@#$#@
 GRAPHICS-WINDOW
 285
