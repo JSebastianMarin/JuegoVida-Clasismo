@@ -23,19 +23,39 @@ end
 
 to setup-random
   clear-all
-  ask patches
-    [ ifelse random-float 100000.0 < initial-density
-      [ cell-parqueRecreativo ]
-      [ cell-hospital ] ]
-
-  ask patches
-    [ ifelse random-float 10000.0 < initial-density
-      [ cell-colegio ]
-      [ cell-industria ] ]
-
+  
+  ;; Asignar parqueRecreativo
   ask patches [
+    ifelse random-float 100000.0 < initial-density
+      [ cell-parqueRecreativo ]
+      [ cell-death ]
+  ]
+
+  ;; Asignar hospital
+  ask patches with [not parqueRecreativo?] [
+    ifelse random-float 50000.0 < initial-density
+      [ cell-hospital ]
+      [ cell-death ]
+  ]
+
+  ;; Asignar colegio en parches no asignados previamente
+  ask patches with [not parqueRecreativo? and not hospital?] [
+    ifelse random-float 10000.0 < initial-density
+      [ cell-colegio ]
+      [ cell-death ]
+  ]
+
+  ;; Asignar industria en parches no asignados previamente
+  ask patches with [not parqueRecreativo? and not hospital? and not colegio?] [
+    ifelse random-float 10000.0 < initial-density
+      [ cell-industria ]
+      [ cell-death ]
+  ]
+
+  ;; Asignar alta, media y baja en parches no asignados previamente
+  ask patches with [not parqueRecreativo? and not hospital? and not colegio? and not industria?] [
     let probabilidad random-float 100.0
-    ifelse probabilidad < initial-density / 6
+    ifelse probabilidad < initial-density / 8
       [ cell-alta ]
       [ ifelse probabilidad < initial-density * 2 / 3
         [ cell-media ]
@@ -105,7 +125,7 @@ end
 to cell-parqueRecreativo
   reset-cell
   set parqueRecreativo? true
-  set pcolor orange
+  set pcolor white
 end
 
 to cell-centro
@@ -117,7 +137,7 @@ end
 to cell-death
   reset-cell
   set living? false
-  set pcolor white  ;; Color de fondo, asumiendo que el color de fondo es blanco
+  set pcolor violet
 end
 
 to go
