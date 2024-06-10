@@ -23,6 +23,16 @@ end
 
 to setup-random
   clear-all
+  ask patches
+    [ ifelse random-float 100000.0 < initial-density
+      [ cell-parqueRecreativo ]
+      [ cell-hospital ] ]
+
+  ask patches
+    [ ifelse random-float 10000.0 < initial-density
+      [ cell-colegio ]
+      [ cell-industria ] ]
+
   ask patches [
     let probabilidad random-float 100.0
     ifelse probabilidad < initial-density / 6
@@ -32,14 +42,7 @@ to setup-random
         [ cell-baja ]
       ]
   ]
-  ask patches
-    [ ifelse random-float 10000.0 < initial-density
-      [ cell-colegio ]
-      [ cell-industria ] ]
-  ask patches
-    [ ifelse random-float 100000.0 < initial-density
-      [ cell-parqueRecreativo ]
-      [ cell-hospital ] ]
+  
   ;; Agregar célula viva en la ubicación central
   let center-x (max-pxcor + min-pxcor) / 2
   let center-y (max-pycor + min-pycor) / 2
@@ -48,51 +51,73 @@ to setup-random
   reset-ticks
 end
 
-;;Definicion de las celulas
 
+;;Reseterar los estados de las celulas
+to reset-cell
+  set baja? false
+  set media? false
+  set alta? false
+  set colegio? false
+  set hospital? false
+  set industria? false
+  set parqueRecreativo? false
+  set centro? false
+  set living? false
+end
+
+;;Definicion de las celulas
 to cell-baja
+  reset-cell
   set baja? true
   set pcolor black
 end
 
 to cell-media
+  reset-cell
   set media? true
   set pcolor brown
 end
 
 to cell-alta
+  reset-cell
   set alta? true
   set pcolor blue
 end
 
 to cell-colegio
+  reset-cell
   set colegio? true
   set pcolor yellow
 end
 
 to cell-hospital
+  reset-cell
   set hospital? true
   set pcolor green
 end
 
 to cell-industria
+  reset-cell
   set industria? true
   set pcolor red
 end
 
 to cell-parqueRecreativo
+  reset-cell
   set parqueRecreativo? true
   set pcolor orange
 end
 
 to cell-centro
+  reset-cell
   set centro? true
   set pcolor gray
 end
 
 to cell-death
-  set living? true
-  set pcolor red
+  reset-cell
+  set living? false
+  set pcolor white  ;; Color de fondo, asumiendo que el color de fondo es blanco
 end
 
 to go
