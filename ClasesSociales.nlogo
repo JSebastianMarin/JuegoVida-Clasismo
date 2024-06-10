@@ -12,6 +12,9 @@ patches-own [
   industria?      ;; indica si la celula es una industria
   parqueRecreativo? ;; indica si la celula es un parque recreativo
   centro?         ;; indica si la celula es el centro
+  baja-neighbors  ;; cuantas celulas vecinas estan vivas de clase baja
+  alta-neighbors  ;; cuantas celulas vecinas estan vivas de clase alta
+  media-neighbors ;; cuantas celulas vecinas estan vivas de clase media
   live-neighbors  ;; cuantas celulas vecinas estan vivas
 ]
 
@@ -33,7 +36,7 @@ to setup-random
 
   ;; Asignar hospital
   ask patches with [not parqueRecreativo?] [
-    ifelse random-float 50000.0 < initial-density
+    ifelse random-float 90000.0 < initial-density
       [ cell-hospital ]
       [ cell-death ]
   ]
@@ -57,7 +60,7 @@ to setup-random
     let probabilidad random-float 100.0
     ifelse probabilidad < initial-density / 8
       [ cell-alta ]
-      [ ifelse probabilidad < initial-density * 2 / 3
+      [ ifelse probabilidad < initial-density * 3 / 3
         [ cell-media ]
         [ cell-baja ]
       ]
@@ -89,7 +92,7 @@ end
 to cell-baja
   reset-cell
   set baja? true
-  set pcolor black
+  set pcolor pink
 end
 
 to cell-media
@@ -137,21 +140,103 @@ end
 to cell-death
   reset-cell
   set living? false
-  set pcolor violet
+  set pcolor black
 end
 
+;;Reglas de transicion de las celulas
+
 to go
+
   ask patches
-    [ set live-neighbors count neighbors with [living?] ]
-  ;; Starting a new "ask patches" here ensures that all the patches
-  ;; finish executing the first ask before any of them start executing
-  ;; the second ask.  This keeps all the patches in synch with each other,
-  ;; so the births and deaths at each generation all happen in lockstep.
+    [ set baja-neighbors count neighbors with [baja?] 
+      set media-neighbors count neighbors with [media?]
+      set alta-neighbors count neighbors with [alta?] 
+    ]
+
+;;Clase baja
+
   ask patches
-    [ ifelse live-neighbors = 3
-      [ cell-alta ]
-      [ if live-neighbors != 2
-        [ cell-death ] ] ]
+    [ ifelse ((media-neighbors >= 4 or baja-neighbors <= 4) and baja?)
+      [ cell-media ]
+      [ if ((baja-neighbors >= 5 or media-neighbors >= 5) and baja?)
+          [ cell-baja ] ] ]
+
+;; Clase media
+
+  ask patches
+    [ set baja-neighbors count neighbors with [baja?] 
+      set media-neighbors count neighbors with [media?]
+      set alta-neighbors count neighbors with [alta?] 
+    ]
+
+  ask patches
+    [ ifelse ((baja-neighbors >= 6 and alta-neighbors = 0) and media?)
+      [ cell-baja ]
+      [ ifelse (((baja-neighbors <= 3 or media-neighbors <= 5) or alta-neighbors = 1) and media?)
+          [ cell-media ] 
+          [if (((baja-neighbors <= 1 or media-neighbors <= 5) or alta-neighbors >= 2) and media?)
+            [ cell-alta ] ] ] ]
+
+;;Clase alta
+
+  ask patches
+    [ set baja-neighbors count neighbors with [baja?] 
+      set media-neighbors count neighbors with [media?]
+      set alta-neighbors count neighbors with [alta?] 
+    ]
+
+  ask patches
+    [ ifelse ((media-neighbors >= 6 or baja-neighbors >= 5) and alta?)
+      [ cell-media ]
+      [ if ((media-neighbors >= 4 or alta-neighbors >= 2) and alta?)
+          [ cell-alta ] ] ]
+
+;;Generales
+
+  ask patches
+    [ set live-neighbors count neighbors with [parqueRecreativo?] ]
+  ask patches
+    [ if live-neighbors > 0
+      [ cell-media ]]
+
+  ask patches
+    [ set live-neighbors count neighbors with [centro?] ]
+  ask patches
+    [ if live-neighbors > 0
+      [ cell-media ]]
+
+  ask patches
+    [ set live-neighbors count neighbors with [industria?] ]
+  ask patches
+    [ if live-neighbors > 0
+      [ cell-baja ]]
+
+;;Colegios
+
+  ask patches
+    [ set live-neighbors count neighbors with [colegio?] ]
+  ask patches
+    [ if live-neighbors > 0 and baja?
+      [ cell-media ]]
+
+  ask patches
+    [ set live-neighbors count neighbors with [colegio?] ]
+  ask patches
+    [ if live-neighbors > 0 and media?
+      [ cell-media ]]
+  
+;;Hospitales
+
+  ask patches
+    [ set live-neighbors count neighbors with [hospital?] ]
+  ask patches
+    [ ifelse live-neighbors > 0 and baja?
+      [ cell-media ]
+      [ ifelse live-neighbors > 0 and media?
+        [ cell-media ] 
+        [if live-neighbors > 0 and alta?
+          [ cell-alta] ] ] ]
+
   tick
 end
 
@@ -239,7 +324,7 @@ MONITOR
 293
 Densidad de clase baja
 count patches with\n  [baja?]\n/ count patches
-2
+5
 1
 11
 
@@ -250,7 +335,7 @@ MONITOR
 293
 Densidad de clase media
 count patches with\n  [media?]\n/ count patches
-2
+5
 1
 11
 
@@ -261,7 +346,7 @@ MONITOR
 293
 Densidad de clase alta
 count patches with\n  [alta?]\n/ count patches
-2
+5
 1
 11
 
