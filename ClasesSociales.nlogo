@@ -15,65 +15,76 @@ end
 
 to setup-random
   clear-all
+  ask patches [
+    let probabilidad random-float 100.0
+    ifelse probabilidad < initial-density / 6
+      [ cell-alta ]
+      [ ifelse probabilidad < initial-density * 2 / 3
+        [ cell-media ]
+        [ cell-baja ]
+      ]
+  ]
   ask patches
-    [ ifelse random-float 100.0 < initial-density
-      [ cell-baja ]
-      [ cell-media ]
-      [ cell-alta ] ]
-  ask patches
-    [ ifels random-float 10000.0 < initial-density
+    [ ifelse random-float 10000.0 < initial-density
       [ cell-colegio ]
-      [ cell-hospital ]
       [ cell-industria ] ]
   ask patches
     [ ifelse random-float 100000.0 < initial-density
-      [ cell-parqueRecreativo ] ]
+      [ cell-parqueRecreativo ]
+      [ cell-hospital ] ]
   ;; Agregar célula viva en la ubicación central
   let center-x (max-pxcor + min-pxcor) / 2
   let center-y (max-pycor + min-pycor) / 2
-  ask patches center-x center-y
+  ask patch center-x center-y
     [ cell-centro ]
   reset-ticks
 end
 
+;;Definicion de las celulas
+
 to cell-baja
-  set living? true
+  set baja? true
   set pcolor black
 end
 
 to cell-media
-  set living? false
+  set media? true
   set pcolor brown
 end
 
 to cell-alta
-  set living? true
+  set alta? true
   set pcolor blue
 end
 
 to cell-colegio
-  set living? true
+  set colegio? true
   set pcolor yellow
 end
 
 to cell-hospital
-  set living? true
+  set hospital? true
   set pcolor green
 end
 
 to cell-industria
-  set living? true
+  set industria? true
   set pcolor red
 end
 
 to cell-parqueRecreativo
-  set living? true
+  set parqueRecreativo? true
   set pcolor orange
 end
 
 to cell-centro
-  set living? true
+  set centro? true
   set pcolor gray
+end
+
+to cell-death
+  set living? true
+  set pcolor red
 end
 
 to go
