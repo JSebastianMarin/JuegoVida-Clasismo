@@ -152,7 +152,7 @@ to go
 ;;Setting los contadores de vecinos de cada clase
 
   ask patches
-      [ 
+      [
         set baja-neighbors count neighbors with [baja?]
         set media-neighbors count neighbors with [media?]
         set alta-neighbors count neighbors with [alta?]
@@ -163,116 +163,115 @@ to go
         set parqueRecreativo-neighbors count neighbors with [parqueRecreativo?]
       ]
 
+;; Procedimientos para los botones
+
+ifelse (politica) [
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;Reglas de transicion para cada clase;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+;; Clase baja
+
+  ask patches
+    [ ifelse ((baja-neighbors >= 5 or media-neighbors <= 4) and baja?)
+      [ cell-baja ]
+      [ ifelse ((media-neighbors >= 5 or baja-neighbors <= 4) and baja?)
+        [ cell-media ]
+        [ if ((alta-neighbors >= 5) and baja?)
+          [ cell-alta ] ] ] ]
+
+;; Clase media
+
+  ask patches
+    [ ifelse ((media-neighbors >= 4 and alta-neighbors >= 3) and media?)
+      [ cell-alta ]
+      [ ifelse (((baja-neighbors <= 3 or media-neighbors <= 4) or alta-neighbors >= 1) and media?)
+        [ cell-media ]
+        [ if ((baja-neighbors >= 5 and alta-neighbors = 0) and media?)
+          [ cell-baja ] ] ] ]
+
+;; Clase alta
+
+  ask patches
+    [ ifelse ((baja-neighbors >= 3) and alta?)
+      [ cell-baja ]
+      [ ifelse ((media-neighbors <= 4 or alta-neighbors >= 2) and alta?)
+        [ cell-alta ]
+        [ if ((media-neighbors >= 6 or baja-neighbors >= 3) and alta?)
+          [ cell-media ] ] ] ]
+]
+[
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;Reglas de transicion para cada clase;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+;; Clase baja
+
+  ask patches
+    [ ifelse ((baja-neighbors >= 5 or media-neighbors <= 4) and baja?)
+      [ cell-baja ]
+      [ ifelse ((media-neighbors >= 5 or baja-neighbors <= 4) and baja?)
+        [ cell-media ]
+        [ if ((alta-neighbors >= 5) and baja?)
+          [ cell-alta ] ] ] ]
+
+;; Clase media
+  ask patches
+    [ ifelse ((media-neighbors >= 4 and alta-neighbors >= 3) and media?)
+      [ cell-alta ]
+      [ ifelse (((baja-neighbors <= 3 or media-neighbors <= 4) or alta-neighbors >= 1) and media?)
+        [ cell-media ]
+        [ if ((baja-neighbors >= 5 and alta-neighbors = 0) and media?)
+          [ cell-baja ] ] ] ]
+
+;; Clase alta
+  ask patches
+    [ ifelse ((baja-neighbors >= 2) and alta?)
+      [ cell-baja ]
+      [ ifelse ((media-neighbors <= 4 or alta-neighbors >= 2) and alta?)
+        [ cell-alta ]
+        [ if ((media-neighbors >= 6 or baja-neighbors >= 3) and alta?)
+          [ cell-media ] ] ] ]
+]
 
 ;; Reglas de transicion para barrios cerca de servicios
 
 ;; Parques recreativos
 
-  ask patches 
-    [ if parqueRecreativo-neighbors > 0 
+  ask patches
+    [ if parqueRecreativo-neighbors > 0
         [ cell-alta ] ]
 
 ;; Parques centro
 
-  ask patches 
-    [ if centro-neighbors > 0 
+  ask patches
+    [ if centro-neighbors > 0
       [ cell-media ] ]
 
 ;; Industria
 
-  ask patches 
-    [ if industria-neighbors > 0 
+  ask patches
+    [ if industria-neighbors > 0
       [ cell-baja ] ]
 
 ;; Colegios
 
-  ask patches 
-    [ if colegio-neighbors > 0 and baja? 
+  ask patches
+    [ if colegio-neighbors > 0 and baja?
       [ cell-media ] ]
-  ask patches 
-    [ if colegio-neighbors > 0 and media? 
+  ask patches
+    [ if colegio-neighbors > 0 and media?
       [ cell-media ] ]
 
 ;; Hospitales
 
-  ask patches 
-    [ ifelse hospital-neighbors > 0 and baja? 
-      [ cell-media ] 
-      [ ifelse hospital-neighbors > 0 and media? 
-        [ cell-alta ] 
-        [ if hospital-neighbors > 0 and alta? 
+  ask patches
+    [ ifelse hospital-neighbors > 0 and baja?
+      [ cell-media ]
+      [ ifelse hospital-neighbors > 0 and media?
+        [ cell-alta ]
+        [ if hospital-neighbors > 0 and alta?
           [ cell-alta ] ] ] ]
 
   tick
 end
-
-;; Procedimientos para los botones
-
-to pepelista
-
-;; Clase baja
-
-  ask patches 
-    [ ifelse ((baja-neighbors >= 5 or media-neighbors <= 4) and baja?) 
-      [ cell-baja ]
-      [ ifelse ((media-neighbors >= 5 or baja-neighbors <= 4) and baja?) 
-        [ cell-media ] 
-        [ if ((alta-neighbors >= 5) and baja?) 
-          [ cell-alta ] ] ]
-
-;; Clase media
-
-    ifelse ((media-neighbors >= 4 and alta-neighbors >= 3) and media?) 
-      [ cell-alta ] 
-      [ ifelse (((baja-neighbors <= 3 or media-neighbors <= 4) or alta-neighbors >= 1) and media?) 
-        [ cell-media ] 
-        [ if ((baja-neighbors >= 5 and alta-neighbors = 0) and media?) 
-          [ cell-baja ] ] ]
-
-;; Clase alta
-
-    ifelse ((baja-neighbors >= 3) and alta?) 
-      [ cell-baja ] 
-      [ ifelse ((media-neighbors <= 4 or alta-neighbors >= 2) and alta?) 
-        [ cell-alta ] 
-        [ if ((media-neighbors >= 6 or baja-neighbors >= 3) and alta?) 
-          [ cell-media ] ] ]
-    ]
-  tick
-end
-
-
-to pepenismo
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;Reglas de transicion para cada clase;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
-;; Clase baja
-  ask patches [
-    ifelse ((baja-neighbors >= 5 or media-neighbors <= 4) and baja?) 
-      [ cell-baja ] 
-      [ ifelse ((media-neighbors >= 5 or baja-neighbors <= 4) and baja?) 
-        [ cell-media ] 
-        [ if ((alta-neighbors >= 5) and baja?) 
-          [ cell-alta ] ] ]
-
-;; Clase media
-    ifelse ((media-neighbors >= 4 and alta-neighbors >= 3) and media?) 
-      [ cell-alta ] 
-      [ ifelse (((baja-neighbors <= 3 or media-neighbors <= 4) or alta-neighbors >= 1) and media?) 
-        [ cell-media ] 
-        [ if ((baja-neighbors >= 5 and alta-neighbors = 0) and media?) 
-          [ cell-baja ] ] ]
-
-;; Clase alta
-    ifelse ((baja-neighbors >= 2) and alta?) 
-      [ cell-baja ] 
-      [ ifelse ((media-neighbors <= 4 or alta-neighbors >= 2) and alta?) 
-        [ cell-alta ] 
-        [ if ((media-neighbors >= 6 or baja-neighbors >= 3) and alta?) 
-          [ cell-media ] ] ]  
-]
-  tick
-end  
 @#$#@#$#@
 GRAPHICS-WINDOW
 285
@@ -417,39 +416,16 @@ NIL
 NIL
 0
 
-BUTTON
-31
-153
-120
-186
-NIL
-pepenismo
-T
+SWITCH
+14
+119
+123
+152
+POLITICA
+POLITICA
 1
-T
-OBSERVER
-NIL
-NIL
-NIL
-NIL
 1
-
-BUTTON
-142
-153
-221
-186
-NIL
-pepelista
-T
-1
-T
-OBSERVER
-NIL
-NIL
-NIL
-NIL
-1
+-1000
 
 @#$#@#$#@
 ## WHAT IS IT?
