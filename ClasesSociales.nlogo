@@ -166,7 +166,7 @@ to go
 ;; Clase media
 
   ask patches
-    [ ifelse ((media-neighbors >= 5 and alta-neighbors >= 3) and media?)
+    [ ifelse ((media-neighbors >= 4 and alta-neighbors >= 3) and media?)
       [ cell-alta ]
       [ ifelse (((baja-neighbors <= 3 or media-neighbors <= 4) or alta-neighbors >= 1) and media?)
           [ cell-media ] 
@@ -178,7 +178,7 @@ to go
   ask patches
     [ ifelse ((media-neighbors <= 4 or alta-neighbors >= 2) and alta?)
       [ cell-alta ]
-      [ ifelse ((media-neighbors >= 5 or baja-neighbors >= 3) and alta?)
+      [ ifelse ((media-neighbors >= 6 or baja-neighbors >= 3) and alta?)
           [ cell-media ]
           [ if ((baja-neighbors <= 3 and alta-neighbors <= 2) and alta?)
             [ cell-baja ] ] ] ]
