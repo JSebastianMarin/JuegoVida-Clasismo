@@ -26,8 +26,9 @@ git clone https://github.com/JSebastianMarin/JuegoVida-Clasismo
 ```
 
 2. **Abrir el archivo en NetLogo:**
-    - Inicia NetLogo.
-    - Abre el archivo `.nlogo` desde NetLogo.
+
+   - Inicia NetLogo.
+   - Abre el archivo `.nlogo` desde NetLogo.
 
 3. **Configuración inicial y ejecución:**
 
@@ -40,18 +41,14 @@ En la interfaz de NetLogo, verás tres botones:
 ## Ejemplo de Uso
 
 1. **Generar la Población Inicial:**
-    - Haz clic en `setup-random`.
+
+   - Haz clic en `setup-random`.
 
 2. **Ejecutar Transiciones Manualmente:**
-    - Haz clic en `go-once` para observar la evolución de la sociedad paso a paso.
+   - Haz clic en `go-once` para observar la evolución de la sociedad paso a paso.
 3. **Ejecutar Transiciones Automáticamente:**
-<<<<<<< HEAD
+   - Haz clic en `go-forever` para ver la evolución continua de la sociedad.
 
-- Haz clic en go-forever para ver la evolución continua de la sociedad.
-
-=======
-    - Haz clic en `go-forever` para ver la evolución continua de la sociedad.
->>>>>>> dde67e4b6dca21207897c35bc105943bfec6b75e
 ## Requisitos del Sistema
 
 - NetLogo 6.0 o superior.
