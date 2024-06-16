@@ -176,12 +176,12 @@ to go
 ;;Clase alta
 
   ask patches
-    [ ifelse ((media-neighbors <= 4 or alta-neighbors >= 2) and alta?)
-      [ cell-alta ]
-      [ ifelse ((media-neighbors >= 6 or baja-neighbors >= 3) and alta?)
-          [ cell-media ]
-          [ if ((baja-neighbors <= 3 and alta-neighbors <= 2) and alta?)
-            [ cell-baja ] ] ] ]
+    [ ifelse ((baja-neighbors >= 3) and alta?)
+      [ cell-baja ]
+      [ ifelse ((media-neighbors <= 4 or alta-neighbors >= 2) and alta?)
+          [ cell-alta ]
+          [ if ((media-neighbors >= 6 or baja-neighbors >= 3) and alta?)
+            [ cell-media ] ] ] ]
 
 ;;Generales
 
