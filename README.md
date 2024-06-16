@@ -19,18 +19,18 @@ En este proyecto, cada célula del autómata tiene los siguientes atributos:
 
 Para ejecutar este proyecto en NetLogo, sigue estos pasos:
 
-1. **Clonar el repositorio:**
+**1. Clonar el repositorio:**
 
 ```
 git clone https://github.com/JSebastianMarin/JuegoVida-Clasismo
 ```
 
-2. **Abrir el archivo en NetLogo:**
+**2. Abrir el archivo en NetLogo:**
 
    - Inicia NetLogo.
    - Abre el archivo `.nlogo` desde NetLogo.
 
-3. **Configuración inicial y ejecución:**
+**3. Configuración inicial y ejecución:**
 
 En la interfaz de NetLogo, verás tres botones:
 
@@ -38,7 +38,7 @@ En la interfaz de NetLogo, verás tres botones:
 - `go-once`: Presiona este botón para avanzar una transición a la vez y observar los cambios paso a paso.
 - `go-forever`: Presiona este botón para ejecutar la simulación continuamente y observar las transiciones automáticas.
 
-4. **Interruptor de políticas (`switch`):**
+**4. Interruptor de políticas (`switch`):**
 
     - En la interfaz de NetLogo, también verás un interruptor de políticas (`switch`).
     - Si el interruptor está en `ON`, se activarán reglas que permiten el desarrollo de la sociedad, promoviendo la expansión de la clase alta.
@@ -47,22 +47,22 @@ En la interfaz de NetLogo, verás tres botones:
 
 ## Ejemplo de Uso
 
-1. **Generar la Población Inicial:**
+**1. Generar la Población Inicial:**
 
    - Haz clic en `setup-random`.
 
-2. **Configurar las Políticas:**
+**2. Configurar las Políticas:**
 
 Ajustar el interruptor de políticas (`switch`) según el comportaiento deseado
 
    - `ON`: Promueve la expansión de la clase media.
    - `OFF`: La clase alta desaparece.
 
-3. **Ejecutar Transiciones Manualmente:**
+**3. Ejecutar Transiciones Manualmente:**
 
    - Haz clic en `go-once` para observar la evolución de la sociedad paso a paso.
 
-4. **Ejecutar Transiciones Automáticamente:**
+**4. Ejecutar Transiciones Automáticamente:**
 
    - Haz clic en `go-forever` para ver la evolución continua de la sociedad.
    - Cambiar el estado del interruptor de políticas durante esta ejecución pausará el desarrollo de la sociedad.
