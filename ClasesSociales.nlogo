@@ -64,14 +64,14 @@ to setup-random
 
   ;; Agregar célula centro en la ubicación central
   let center-x (max-pxcor + min-pxcor) / 2
-  let center-y (max-pycor + min-pycor) / 2
-  ask patch center-x center-y
-    [ cell-centro ]
+  let center-y (max-pycor + min-pxcor) / 2
+  ask patch center-x center-y [
+    cell-centro
+  ]
   reset-ticks
 end
 
-
-;;Resetear los estados de las celulas
+;; Resetear los estados de las celulas
 to reset-cell
   set baja? false
   set media? false
@@ -84,7 +84,7 @@ to reset-cell
   set living? true
 end
 
-;;Definicion de las celulas
+;; Definicion de las celulas
 to cell-baja
   reset-cell
   set baja? true
@@ -101,6 +101,12 @@ to cell-alta
   reset-cell
   set alta? true
   set pcolor blue
+end
+
+to cell-death
+  reset-cell
+  set living? false
+  set pcolor black
 end
 
 to cell-colegio
@@ -133,105 +139,177 @@ to cell-centro
   set pcolor gray
 end
 
-to cell-death
-  reset-cell
-  set living? false
-  set pcolor black
-end
-
-;;Reglas de transicion de las celulas
-
+;; Reglas de transicion de las celulas
 to go
+  ;; Setting los contadores de vecinos de cada clase
+  ask patches [
+    set baja-neighbors count neighbors with [baja?]
+    set media-neighbors count neighbors with [media?]
+    set alta-neighbors count neighbors with [alta?]
+  ]
 
-;;Setting los contadores de vecinos de cada clase
-  ask patches
-      [ set baja-neighbors count neighbors with [baja?] 
-        set media-neighbors count neighbors with [media?]
-        set alta-neighbors count neighbors with [alta?] 
+  ;; Reglas de transicion para barrios cerca de servicios
+
+  ;; Parques recreativos
+  ask patches [
+    set live-neighbors count neighbors with [parqueRecreativo?]
+  ]
+  ask patches [
+    if live-neighbors > 0 [
+      cell-alta
+    ]
+  ]
+
+  ;; Parques centro
+  ask patches [
+    set live-neighbors count neighbors with [centro?]
+  ]
+  ask patches [
+    if live-neighbors > 0 [
+      cell-media
+    ]
+  ]
+
+  ;; Industria
+  ask patches [
+    set live-neighbors count neighbors with [industria?]
+  ]
+  ask patches [
+    if live-neighbors > 0 [
+      cell-baja
+    ]
+  ]
+
+  ;; Colegios
+  ask patches [
+    set live-neighbors count neighbors with [colegio?]
+  ]
+  ask patches [
+    if live-neighbors > 0 and baja? [
+      cell-media
+    ]
+  ]
+  ask patches [
+    set live-neighbors count neighbors with [colegio?]
+  ]
+  ask patches [
+    if live-neighbors > 0 and media? [
+      cell-media
+    ]
+  ]
+
+  ;; Hospitales
+  ask patches [
+    set live-neighbors count neighbors with [hospital?]
+  ]
+  ask patches [
+    ifelse live-neighbors > 0 and baja? [
+      cell-media
+    ] [
+      ifelse live-neighbors > 0 and media? [
+        cell-alta
+      ] [
+        if live-neighbors > 0 and alta? [
+          cell-alta
+        ]
       ]
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;Reglas de transicion para cada clase;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;Clase baja
-
-  ask patches
-    [ ifelse ((baja-neighbors >= 5 or media-neighbors <= 4) and baja?)
-      [ cell-baja ]
-      [ ifelse ((media-neighbors >= 5 or baja-neighbors <= 4) and baja?)
-          [ cell-media ]
-          [if (( alta-neighbors >= 5) and baja?)
-            [ cell-alta ] ] ] ]
-
-;; Clase media
-
-  ask patches
-    [ ifelse ((media-neighbors >= 4 and alta-neighbors >= 3) and media?)
-      [ cell-alta ]
-      [ ifelse (((baja-neighbors <= 3 or media-neighbors <= 4) or alta-neighbors >= 1) and media?)
-          [ cell-media ] 
-          [if ((baja-neighbors >= 5 and alta-neighbors = 0) and media?)
-            [ cell-baja ] ] ] ]
-
-;;Clase alta
-
-  ask patches
-    [ ifelse ((baja-neighbors >= 3) and alta?)
-      [ cell-baja ]
-      [ ifelse ((media-neighbors <= 4 or alta-neighbors >= 2) and alta?)
-          [ cell-alta ]
-          [ if ((media-neighbors >= 6 or baja-neighbors >= 3) and alta?)
-            [ cell-media ] ] ] ]
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;Reglas de transicion para barrios cerca de servicios;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
-;;Parques recreativos
-
-  ask patches
-    [ set live-neighbors count neighbors with [parqueRecreativo?] ]
-  ask patches
-    [ if live-neighbors > 0
-      [ cell-alta ]]
-
-;;Parques centro
-
-  ask patches
-    [ set live-neighbors count neighbors with [centro?] ]
-  ask patches
-    [ if live-neighbors > 0
-      [ cell-media ]]
-
-  ask patches
-    [ set live-neighbors count neighbors with [industria?] ]
-  ask patches
-    [ if live-neighbors > 0
-      [ cell-baja ]]
-
-;;Colegios
-
-  ask patches
-    [ set live-neighbors count neighbors with [colegio?] ]
-  ask patches
-    [ if live-neighbors > 0 and baja?
-      [ cell-media ]]
-
-  ask patches
-    [ set live-neighbors count neighbors with [colegio?] ]
-  ask patches
-    [ if live-neighbors > 0 and media?
-      [ cell-media ]]
-  
-;;Hospitales
-
-  ask patches
-    [ set live-neighbors count neighbors with [hospital?] ]
-  ask patches
-    [ ifelse live-neighbors > 0 and baja?
-      [ cell-media ]
-      [ ifelse live-neighbors > 0 and media?
-        [ cell-alta ] 
-        [if live-neighbors > 0 and alta?
-          [ cell-alta] ] ] ]
+    ]
+  ]
 
   tick
 end
 
+;; Procedimientos para los botones
+
+
+to pepelista
+  ask patches [
+    ;; Clase baja
+    ifelse ((baja-neighbors >= 5 or media-neighbors <= 4) and baja?) [
+      cell-baja
+    ] [
+      ifelse ((media-neighbors >= 5 or baja-neighbors <= 4) and baja?) [
+        cell-media
+      ] [
+        if ((alta-neighbors >= 5) and baja?) [
+          cell-alta
+        ]
+      ]
+    ]
+
+    ;; Clase media
+    ifelse ((media-neighbors >= 4 and alta-neighbors >= 3) and media?) [
+      cell-alta
+    ] [
+      ifelse (((baja-neighbors <= 3 or media-neighbors <= 4) or alta-neighbors >= 1) and media?) [
+        cell-media
+      ] [
+        if ((baja-neighbors >= 5 and alta-neighbors = 0) and media?) [
+          cell-baja
+        ]
+      ]
+    ]
+
+    ;; Clase alta
+    ifelse ((baja-neighbors >= 3) and alta?) [
+      cell-baja
+    ] [
+      ifelse ((media-neighbors <= 4 or alta-neighbors >= 2) and alta?) [
+        cell-alta
+      ] [
+        if ((media-neighbors >= 6 or baja-neighbors >= 3) and alta?) [
+          cell-media
+        ]
+      ]
+    ]
+]
+  tick
+end
+
+
+to pepenismo
+  ask patches [
+    ;; Clase baja
+    ifelse ((baja-neighbors >= 5 or media-neighbors <= 4) and baja?) [
+      cell-baja
+    ] [
+      ifelse ((media-neighbors >= 5 or baja-neighbors <= 4) and baja?) [
+        cell-media
+      ] [
+        if ((alta-neighbors >= 5) and baja?) [
+          cell-alta
+        ]
+      ]
+    ]
+
+    ;; Clase media
+    ifelse ((media-neighbors >= 4 and alta-neighbors >= 3) and media?) [
+      cell-alta
+    ] [
+      ifelse (((baja-neighbors <= 3 or media-neighbors <= 4) or alta-neighbors >= 1) and media?) [
+        cell-media
+      ] [
+        if ((baja-neighbors >= 5 and alta-neighbors = 0) and media?) [
+          cell-baja
+        ]
+      ]
+    ]
+
+    ;; Clase alta
+    ifelse ((baja-neighbors >= 2) and alta?) [
+      cell-baja
+    ] [
+      ifelse ((media-neighbors <= 4 or alta-neighbors >= 2) and alta?) [
+        cell-alta
+      ] [
+        if ((media-neighbors >= 6 or baja-neighbors >= 3) and alta?) [
+          cell-media
+        ]
+      ]
+    ]
+  ]
+  tick
+end
 @#$#@#$#@
 GRAPHICS-WINDOW
 285
@@ -269,7 +347,7 @@ initial-density
 initial-density
 0.0
 100.0
-35.0
+34.0
 0.1
 1
 %
@@ -307,7 +385,7 @@ MONITOR
 14
 300
 135
-293
+345
 Densidad de clase media
 count patches with\n  [media?]\n/ count patches
 5
@@ -318,7 +396,7 @@ MONITOR
 14
 352
 135
-293
+397
 Densidad de clase alta
 count patches with\n  [alta?]\n/ count patches
 5
@@ -375,6 +453,40 @@ NIL
 NIL
 NIL
 0
+
+BUTTON
+31
+153
+120
+186
+NIL
+pepenismo
+T
+1
+T
+OBSERVER
+NIL
+NIL
+NIL
+NIL
+1
+
+BUTTON
+142
+153
+221
+186
+NIL
+pepelista
+T
+1
+T
+OBSERVER
+NIL
+NIL
+NIL
+NIL
+1
 
 @#$#@#$#@
 ## WHAT IS IT?
