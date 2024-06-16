@@ -145,11 +145,11 @@ to cell-death
   set pcolor black
 end
 
-;;Reglas de transicion de las celulas
+;;Definicion reglas de transicion de las celulas
 
-to go
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;SETTERS;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-;;Setting los contadores de vecinos de cada clase
+to setterClasesYServicios
 
   ask patches
       [
@@ -163,14 +163,13 @@ to go
         set parqueRecreativo-neighbors count neighbors with [parqueRecreativo?]
       ]
 
-;; Procedimientos para los botones
-
-ifelse (politica) [
+end
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;REGLAS PEPENISMO;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;Reglas de transicion para cada clase;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-;; Clase baja
+to transicionClasesPepenismo
+
+  ;; Clase baja
 
   ask patches
     [ ifelse ((baja-neighbors >= 5 or media-neighbors <= 4) and baja?)
@@ -199,11 +198,14 @@ ifelse (politica) [
         [ cell-alta ]
         [ if ((media-neighbors >= 6 or baja-neighbors >= 3) and alta?)
           [ cell-media ] ] ] ]
-]
-[
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;Reglas de transicion para cada clase;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-;; Clase baja
+end
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;REGLAS PEPERONISMO;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+to transicionClasesPeperonismo
+
+  ;; Clase baja
 
   ask patches
     [ ifelse ((baja-neighbors >= 5 or media-neighbors <= 4) and baja?)
@@ -230,49 +232,74 @@ ifelse (politica) [
         [ cell-alta ]
         [ if ((media-neighbors >= 3 or baja-neighbors >= 3) and alta?)
           [ cell-media ] ] ] ]
-]
 
-;; Reglas de transicion para barrios cerca de servicios
+end
 
-;; Parques recreativos
+to transicionClasesCercaSevicios
 
-  ask patches
-    [ if parqueRecreativo-neighbors > 0
-        [ cell-alta ] ]
+  ;; Parques recreativos
 
-;; Parques centro
+    ask patches
+      [ if parqueRecreativo-neighbors > 0
+          [ cell-alta ] ]
 
-  ask patches
-    [ if centro-neighbors > 0
-      [ cell-media ] ]
+  ;; Parques centro
 
-;; Industria
+    ask patches
+      [ if centro-neighbors > 0
+        [ cell-media ] ]
 
-  ask patches
-    [ if industria-neighbors > 0
-      [ cell-baja ] ]
+  ;; Industria
 
-;; Colegios
+    ask patches
+      [ if industria-neighbors > 0
+        [ cell-baja ] ]
 
-  ask patches
-    [ if colegio-neighbors > 0 and baja?
-      [ cell-media ] ]
-  ask patches
-    [ if colegio-neighbors > 0 and media?
-      [ cell-media ] ]
+  ;; Colegios
 
-;; Hospitales
+    ask patches
+      [ if colegio-neighbors > 0 and baja?
+        [ cell-media ] ]
+    ask patches
+      [ if colegio-neighbors > 0 and media?
+        [ cell-media ] ]
 
-  ask patches
-    [ ifelse hospital-neighbors > 0 and baja?
-      [ cell-media ]
-      [ ifelse hospital-neighbors > 0 and media?
-        [ cell-alta ]
-        [ if hospital-neighbors > 0 and alta?
-          [ cell-alta ] ] ] ]
+  ;; Hospitales
+
+    ask patches
+      [ ifelse hospital-neighbors > 0 and baja?
+        [ cell-media ]
+        [ ifelse hospital-neighbors > 0 and media?
+          [ cell-alta ]
+          [ if hospital-neighbors > 0 and alta?
+            [ cell-alta ] ] ] ]
+
+end
+
+
+;;Ejecucion reglas de transicion de las celulas
+
+to go
+
+;;Setting los contadores de vecinos de cada clase
+
+  setterClasesYServicios
+  
+;; Procedimientos para el switch de politica
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;Reglas de transicion para cada clase;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+ifelse (politica) 
+  [ transicionClasesPepenismo ]
+  [ transicionClasesPeperonismo ]
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;Reglas de transicion para servicios;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+  transicionClasesCercaSevicios
 
   tick
 end
+
 @#$#@#$#@
 GRAPHICS-WINDOW
 285
@@ -419,14 +446,24 @@ NIL
 
 SWITCH
 14
-119
-123
 152
+123
+185
 POLITICA
 POLITICA
 1
 1
 -1000
+
+TEXTBOX
+17
+117
+167
+145
+Off = Malas politicas\nOn = Buenas politicas
+11
+0.0
+1
 
 @#$#@#$#@
 ## WHAT IS IT?
