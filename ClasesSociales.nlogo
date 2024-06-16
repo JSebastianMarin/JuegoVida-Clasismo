@@ -1,7 +1,3 @@
-globals [
-  erasing?        ;; is the current draw-cells mouse click erasing or adding?
-]
-
 patches-own [
   living?         ;; indica si la celula está viva
   baja?           ;; indica si la celula es de clase baja
@@ -12,9 +8,9 @@ patches-own [
   industria?      ;; indica si la celula es una industria
   parqueRecreativo? ;; indica si la celula es un parque recreativo
   centro?         ;; indica si la celula es el centro
-  baja-neighbors  ;; cuantas celulas vecinas estan vivas de clase baja
-  alta-neighbors  ;; cuantas celulas vecinas estan vivas de clase alta
-  media-neighbors ;; cuantas celulas vecinas estan vivas de clase media
+  baja-neighbors  ;; cuantas celulas vecinas de clase baja
+  alta-neighbors  ;; cuantas celulas vecinas de clase alta
+  media-neighbors ;; cuantas celulas vecinas de clase media
   live-neighbors  ;; cuantas celulas vecinas estan vivas
 ]
 
@@ -66,7 +62,7 @@ to setup-random
       ]
   ]
 
-  ;; Agregar célula viva en la ubicación central
+  ;; Agregar célula centro en la ubicación central
   let center-x (max-pxcor + min-pxcor) / 2
   let center-y (max-pycor + min-pycor) / 2
   ask patch center-x center-y
@@ -75,7 +71,7 @@ to setup-random
 end
 
 
-;;Reseterar los estados de las celulas
+;;Resetear los estados de las celulas
 to reset-cell
   set baja? false
   set media? false
