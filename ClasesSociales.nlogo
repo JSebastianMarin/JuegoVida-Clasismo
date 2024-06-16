@@ -325,8 +325,8 @@ GRAPHICS-WINDOW
 1
 1
 0
-1
-1
+0
+0
 1
 -50
 50
@@ -386,6 +386,7 @@ MONITOR
 300
 135
 345
+345
 Densidad de clase media
 count patches with\n  [media?]\n/ count patches
 5
@@ -396,6 +397,7 @@ MONITOR
 14
 352
 135
+397
 397
 Densidad de clase alta
 count patches with\n  [alta?]\n/ count patches
@@ -491,7 +493,9 @@ NIL
 @#$#@#$#@
 ## WHAT IS IT?
 
-(a general understanding of what the model is trying to show or explain)
+Este proyecto es una simulación de una sociedad utilizando un autómata celular. 
+El modelo simula diferentes niveles de ingresos dentro de una comunidad, visualizando cada celda con un color representativo. 
+Además, hay celdas especiales que representan hospitales, colegios, centros recreativos y otros puntos de interés distribuidos por el mapa.
 
 ## HOW IT WORKS
 
@@ -499,7 +503,17 @@ NIL
 
 ## HOW TO USE IT
 
-(how to use the model, including a description of each of the items in the Interface tab)
+1. **Generar la Población Inicial:**
+
+    - Haz clic en setup-random.
+
+2. **Ejecutar Transiciones Manualmente:**
+
+    - Haz clic en go-once para observar la evolución de la sociedad paso a paso.
+
+3. **Ejecutar Transiciones Automáticamente:**
+
+    - Haz clic en go-forever para ver la evolución continua de la sociedad.
 
 ## THINGS TO NOTICE
 
