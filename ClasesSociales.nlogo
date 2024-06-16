@@ -150,6 +150,7 @@ to go
         set alta-neighbors count neighbors with [alta?]
       ]
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;Reglas de transicion para cada clase;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
 ;;Clase baja
 
   ask patches
@@ -189,13 +190,15 @@ to go
     [ if live-neighbors > 0
       [ cell-alta ]]
 
-;;Parques centro
+;;Centro
 
   ask patches
     [ set live-neighbors count neighbors with [centro?] ]
   ask patches
     [ if live-neighbors > 0
       [ cell-media ]]
+
+;;Industria
 
   ask patches
     [ set live-neighbors count neighbors with [industria?] ]
