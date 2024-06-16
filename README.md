@@ -36,12 +36,12 @@ En la interfaz de NetLogo, verás tres botones:
 
 ## Ejemplo de Uso
 1. **Generar la Población Inicial:**
-    - Haz clic en setup-random.
+    - Haz clic en `setup-random`.
 
 2. **Ejecutar Transiciones Manualmente:**
-    - Haz clic en go-once para observar la evolución de la sociedad paso a paso.
+    - Haz clic en `go-once` para observar la evolución de la sociedad paso a paso.
 3. **Ejecutar Transiciones Automáticamente:**
-    - Haz clic en go-forever para ver la evolución continua de la sociedad.
+    - Haz clic en `go-forever` para ver la evolución continua de la sociedad.
 ## Requisitos del Sistema
 - NetLogo 6.0 o superior.
 - Compatible con Windows, macOS y Linux.
