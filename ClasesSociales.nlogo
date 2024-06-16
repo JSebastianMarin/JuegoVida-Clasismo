@@ -145,9 +145,9 @@ to go
 
 ;;Setting los contadores de vecinos de cada clase
   ask patches
-      [ set baja-neighbors count neighbors with [baja?] 
+      [ set baja-neighbors count neighbors with [baja?]
         set media-neighbors count neighbors with [media?]
-        set alta-neighbors count neighbors with [alta?] 
+        set alta-neighbors count neighbors with [alta?]
       ]
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;Reglas de transicion para cada clase;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;Clase baja
@@ -166,7 +166,7 @@ to go
     [ ifelse ((media-neighbors >= 4 and alta-neighbors >= 3) and media?)
       [ cell-alta ]
       [ ifelse (((baja-neighbors <= 3 or media-neighbors <= 4) or alta-neighbors >= 1) and media?)
-          [ cell-media ] 
+          [ cell-media ]
           [if ((baja-neighbors >= 5 and alta-neighbors = 0) and media?)
             [ cell-baja ] ] ] ]
 
@@ -216,7 +216,7 @@ to go
   ask patches
     [ if live-neighbors > 0 and media?
       [ cell-media ]]
-  
+
 ;;Hospitales
 
   ask patches
@@ -225,13 +225,12 @@ to go
     [ ifelse live-neighbors > 0 and baja?
       [ cell-media ]
       [ ifelse live-neighbors > 0 and media?
-        [ cell-alta ] 
+        [ cell-alta ]
         [if live-neighbors > 0 and alta?
           [ cell-alta] ] ] ]
 
   tick
 end
-
 @#$#@#$#@
 GRAPHICS-WINDOW
 285
@@ -247,8 +246,8 @@ GRAPHICS-WINDOW
 1
 1
 0
-1
-1
+0
+0
 1
 -50
 50
@@ -307,7 +306,7 @@ MONITOR
 14
 300
 135
-293
+345
 Densidad de clase media
 count patches with\n  [media?]\n/ count patches
 5
@@ -318,7 +317,7 @@ MONITOR
 14
 352
 135
-293
+397
 Densidad de clase alta
 count patches with\n  [alta?]\n/ count patches
 5
@@ -379,7 +378,9 @@ NIL
 @#$#@#$#@
 ## WHAT IS IT?
 
-(a general understanding of what the model is trying to show or explain)
+Este proyecto es una simulación de una sociedad utilizando un autómata celular. 
+El modelo simula diferentes niveles de ingresos dentro de una comunidad, visualizando cada celda con un color representativo. 
+Además, hay celdas especiales que representan hospitales, colegios, centros recreativos y otros puntos de interés distribuidos por el mapa.
 
 ## HOW IT WORKS
 
@@ -387,7 +388,17 @@ NIL
 
 ## HOW TO USE IT
 
-(how to use the model, including a description of each of the items in the Interface tab)
+1. **Generar la Población Inicial:**
+
+    - Haz clic en setup-random.
+
+2. **Ejecutar Transiciones Manualmente:**
+
+    - Haz clic en go-once para observar la evolución de la sociedad paso a paso.
+
+3. **Ejecutar Transiciones Automáticamente:**
+
+    - Haz clic en go-forever para ver la evolución continua de la sociedad.
 
 ## THINGS TO NOTICE
 
