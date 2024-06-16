@@ -281,7 +281,7 @@ end
 
 to go
 
-;;Setting los contadores de vecinos de cada clase
+;;Setting los contadores de vecinos de cada clase y servicios cercanos
 
   setterClasesYServicios
   
