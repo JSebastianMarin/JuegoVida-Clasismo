@@ -40,10 +40,10 @@ En la interfaz de NetLogo, verás tres botones:
 
 **4. Interruptor de políticas (`switch`):**
 
-    - En la interfaz de NetLogo, también verás un interruptor de políticas (`switch`).
-    - Si el interruptor está en `ON`, se activarán reglas que permiten el desarrollo de la sociedad, promoviendo la expansión de la clase alta.
-    - Si el interruptor está en `OFF`, se activarán reglas que harán desaparecer la clase alta.
-    - Cambiar el estado del interruptor en medio de una iteración pausará el desarrollo de la sociedad.
+- En la interfaz de NetLogo, también verás un interruptor de políticas (`switch`).
+- Si el interruptor está en `ON`, se activarán reglas que permiten el desarrollo de la sociedad, promoviendo la expansión de la clase alta.
+- Si el interruptor está en `OFF`, se activarán reglas que harán desaparecer la clase alta.
+- Cambiar el estado del interruptor en medio de una iteración pausará el desarrollo de la sociedad.
 
 ## Ejemplo de Uso
 
