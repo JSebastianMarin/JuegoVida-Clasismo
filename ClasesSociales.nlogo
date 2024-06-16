@@ -30,7 +30,7 @@ to setup-random
       [ cell-death ]
   ]
 
-  ;; Asignar hospital
+  ;; Asignar hospital en parches no asignados previamente
   ask patches with [not parqueRecreativo?] [
     ifelse random-float 90000.0 < initial-density
       [ cell-hospital ]
@@ -56,7 +56,7 @@ to setup-random
     let probabilidad random-float 100.0
     ifelse probabilidad < initial-density / 10
       [ cell-alta ]
-      [ ifelse probabilidad < initial-density * 3 / 3
+      [ ifelse probabilidad < initial-density
         [ cell-media ]
         [ cell-baja ]
       ]
@@ -81,7 +81,7 @@ to reset-cell
   set industria? false
   set parqueRecreativo? false
   set centro? false
-  set living? false
+  set living? true
 end
 
 ;;Definicion de las celulas
@@ -143,12 +143,13 @@ end
 
 to go
 
+;;Setting los contadores de vecinos de cada clase
   ask patches
       [ set baja-neighbors count neighbors with [baja?] 
         set media-neighbors count neighbors with [media?]
         set alta-neighbors count neighbors with [alta?] 
       ]
-
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;Reglas de transicion para cada clase;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;Clase baja
 
   ask patches
@@ -178,14 +179,17 @@ to go
           [ cell-alta ]
           [ if ((media-neighbors >= 6 or baja-neighbors >= 3) and alta?)
             [ cell-media ] ] ] ]
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;Reglas de transicion para barrios cerca de servicios;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-;;Generales
+;;Parques recreativos
 
   ask patches
     [ set live-neighbors count neighbors with [parqueRecreativo?] ]
   ask patches
     [ if live-neighbors > 0
       [ cell-alta ]]
+
+;;Parques centro
 
   ask patches
     [ set live-neighbors count neighbors with [centro?] ]
