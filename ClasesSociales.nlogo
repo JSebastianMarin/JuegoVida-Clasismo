@@ -167,6 +167,7 @@ to go
 
 ifelse (politica) [
 
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;REGLAS PEPENISMO;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;Reglas de transicion para cada clase;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 ;; Clase baja
@@ -214,7 +215,7 @@ ifelse (politica) [
 
 ;; Clase media
   ask patches
-    [ ifelse ((media-neighbors >= 4 and alta-neighbors >= 3) and media?)
+    [ ifelse ((media-neighbors >= 4 and alta-neighbors >= 4) and media?)
       [ cell-alta ]
       [ ifelse (((baja-neighbors <= 3 or media-neighbors <= 4) or alta-neighbors >= 1) and media?)
         [ cell-media ]
@@ -227,7 +228,7 @@ ifelse (politica) [
       [ cell-baja ]
       [ ifelse ((media-neighbors <= 4 or alta-neighbors >= 2) and alta?)
         [ cell-alta ]
-        [ if ((media-neighbors >= 6 or baja-neighbors >= 3) and alta?)
+        [ if ((media-neighbors >= 3 or baja-neighbors >= 3) and alta?)
           [ cell-media ] ] ] ]
 ]
 
