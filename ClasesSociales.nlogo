@@ -1,7 +1,3 @@
-globals [
-  erasing?        ;; is the current draw-cells mouse click erasing or adding?
-]
-
 patches-own [
   living?         ;; indica si la celula está viva
   baja?           ;; indica si la celula es de clase baja
@@ -12,9 +8,9 @@ patches-own [
   industria?      ;; indica si la celula es una industria
   parqueRecreativo? ;; indica si la celula es un parque recreativo
   centro?         ;; indica si la celula es el centro
-  baja-neighbors  ;; cuantas celulas vecinas estan vivas de clase baja
-  alta-neighbors  ;; cuantas celulas vecinas estan vivas de clase alta
-  media-neighbors ;; cuantas celulas vecinas estan vivas de clase media
+  baja-neighbors  ;; cuantas celulas vecinas de clase baja
+  alta-neighbors  ;; cuantas celulas vecinas de clase alta
+  media-neighbors ;; cuantas celulas vecinas de clase media
   live-neighbors  ;; cuantas celulas vecinas estan vivas
 ]
 
@@ -34,7 +30,7 @@ to setup-random
       [ cell-death ]
   ]
 
-  ;; Asignar hospital
+  ;; Asignar hospital en parches no asignados previamente
   ask patches with [not parqueRecreativo?] [
     ifelse random-float 90000.0 < initial-density
       [ cell-hospital ]
@@ -60,13 +56,13 @@ to setup-random
     let probabilidad random-float 100.0
     ifelse probabilidad < initial-density / 10
       [ cell-alta ]
-      [ ifelse probabilidad < initial-density * 3 / 3
+      [ ifelse probabilidad < initial-density
         [ cell-media ]
         [ cell-baja ]
       ]
   ]
 
-  ;; Agregar célula viva en la ubicación central
+  ;; Agregar célula centro en la ubicación central
   let center-x (max-pxcor + min-pxcor) / 2
   let center-y (max-pycor + min-pycor) / 2
   ask patch center-x center-y
@@ -75,7 +71,7 @@ to setup-random
 end
 
 
-;;Reseterar los estados de las celulas
+;;Resetear los estados de las celulas
 to reset-cell
   set baja? false
   set media? false
@@ -85,7 +81,7 @@ to reset-cell
   set industria? false
   set parqueRecreativo? false
   set centro? false
-  set living? false
+  set living? true
 end
 
 ;;Definicion de las celulas
@@ -147,12 +143,13 @@ end
 
 to go
 
+;;Setting los contadores de vecinos de cada clase
   ask patches
       [ set baja-neighbors count neighbors with [baja?] 
         set media-neighbors count neighbors with [media?]
         set alta-neighbors count neighbors with [alta?] 
       ]
-
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;Reglas de transicion para cada clase;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;Clase baja
 
   ask patches
@@ -182,14 +179,17 @@ to go
           [ cell-alta ]
           [ if ((media-neighbors >= 6 or baja-neighbors >= 3) and alta?)
             [ cell-media ] ] ] ]
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;Reglas de transicion para barrios cerca de servicios;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-;;Generales
+;;Parques recreativos
 
   ask patches
     [ set live-neighbors count neighbors with [parqueRecreativo?] ]
   ask patches
     [ if live-neighbors > 0
       [ cell-alta ]]
+
+;;Parques centro
 
   ask patches
     [ set live-neighbors count neighbors with [centro?] ]
