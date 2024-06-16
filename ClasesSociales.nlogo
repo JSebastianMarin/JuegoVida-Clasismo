@@ -284,12 +284,12 @@ to go
 ;;Setting los contadores de vecinos de cada clase y servicios cercanos
 
   setterClasesYServicios
-  
+
 ;; Procedimientos para el switch de politica
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;Reglas de transicion para cada clase;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-ifelse (politica) 
+ifelse (politica)
   [ transicionClasesPepenismo ]
   [ transicionClasesPeperonismo ]
 
@@ -299,7 +299,6 @@ ifelse (politica)
 
   tick
 end
-
 @#$#@#$#@
 GRAPHICS-WINDOW
 285
@@ -478,17 +477,25 @@ Además, hay celdas especiales que representan hospitales, colegios, centros rec
 
 ## HOW TO USE IT
 
-1. **Generar la Población Inicial:**
+**1. Generar la Población Inicial:**
+    
+    * Haz clic en `setup-random`.
 
-    - Haz clic en setup-random.
+**2. Configurar las Políticas:**
 
-2. **Ejecutar Transiciones Manualmente:**
+    * Ajustar el interruptor de políticas (`switch`) según el comportaiento deseado:
 
-    - Haz clic en go-once para observar la evolución de la sociedad paso a paso.
+        - `ON`: Promueve la expansión de la clase media.
+       - `OFF`: La clase alta desaparece.
 
-3. **Ejecutar Transiciones Automáticamente:**
+**3. Ejecutar Transiciones Manualmente:**
 
-    - Haz clic en go-forever para ver la evolución continua de la sociedad.
+    - Haz clic en `go-once` para observar la evolución de la sociedad paso a paso.
+
+**4. Ejecutar Transiciones Automáticamente:**
+
+    - Haz clic en `go-forever` para ver la evolución continua de la sociedad.
+   - Cambiar el estado del interruptor de políticas durante esta ejecución pausará el desarrollo de la sociedad.
 
 ## THINGS TO NOTICE
 
