@@ -58,7 +58,7 @@ to setup-random
   ;; Asignar alta, media y baja en parches no asignados previamente
   ask patches with [not parqueRecreativo? and not hospital? and not colegio? and not industria?] [
     let probabilidad random-float 100.0
-    ifelse probabilidad < initial-density / 8
+    ifelse probabilidad < initial-density / 10
       [ cell-alta ]
       [ ifelse probabilidad < initial-density * 3 / 3
         [ cell-media ]
@@ -148,48 +148,40 @@ end
 to go
 
   ask patches
-    [ set baja-neighbors count neighbors with [baja?] 
-      set media-neighbors count neighbors with [media?]
-      set alta-neighbors count neighbors with [alta?] 
-    ]
+      [ set baja-neighbors count neighbors with [baja?] 
+        set media-neighbors count neighbors with [media?]
+        set alta-neighbors count neighbors with [alta?] 
+      ]
 
 ;;Clase baja
 
   ask patches
-    [ ifelse ((media-neighbors >= 4 or baja-neighbors <= 4) and baja?)
-      [ cell-media ]
-      [ if ((baja-neighbors >= 5 or media-neighbors >= 5) and baja?)
-          [ cell-baja ] ] ]
+    [ ifelse ((baja-neighbors >= 5 or media-neighbors <= 4) and baja?)
+      [ cell-baja ]
+      [ ifelse ((media-neighbors >= 5 or baja-neighbors <= 4) and baja?)
+          [ cell-media ]
+          [if (( alta-neighbors >= 5) and baja?)
+            [ cell-alta ] ] ] ]
 
 ;; Clase media
 
   ask patches
-    [ set baja-neighbors count neighbors with [baja?] 
-      set media-neighbors count neighbors with [media?]
-      set alta-neighbors count neighbors with [alta?] 
-    ]
-
-  ask patches
-    [ ifelse ((baja-neighbors >= 6 and alta-neighbors = 0) and media?)
-      [ cell-baja ]
-      [ ifelse (((baja-neighbors <= 3 or media-neighbors <= 5) or alta-neighbors = 1) and media?)
+    [ ifelse ((media-neighbors >= 5 and alta-neighbors >= 3) and media?)
+      [ cell-alta ]
+      [ ifelse (((baja-neighbors <= 3 or media-neighbors <= 4) or alta-neighbors >= 1) and media?)
           [ cell-media ] 
-          [if (((baja-neighbors <= 1 or media-neighbors <= 5) or alta-neighbors >= 2) and media?)
-            [ cell-alta ] ] ] ]
+          [if ((baja-neighbors >= 5 and alta-neighbors = 0) and media?)
+            [ cell-baja ] ] ] ]
 
 ;;Clase alta
 
   ask patches
-    [ set baja-neighbors count neighbors with [baja?] 
-      set media-neighbors count neighbors with [media?]
-      set alta-neighbors count neighbors with [alta?] 
-    ]
-
-  ask patches
-    [ ifelse ((media-neighbors >= 6 or baja-neighbors >= 5) and alta?)
-      [ cell-media ]
-      [ if ((media-neighbors >= 4 or alta-neighbors >= 2) and alta?)
-          [ cell-alta ] ] ]
+    [ ifelse ((media-neighbors <= 4 or alta-neighbors >= 2) and alta?)
+      [ cell-alta ]
+      [ ifelse ((media-neighbors >= 5 or baja-neighbors >= 3) and alta?)
+          [ cell-media ]
+          [ if ((baja-neighbors <= 3 and alta-neighbors <= 2) and alta?)
+            [ cell-baja ] ] ] ]
 
 ;;Generales
 
@@ -197,7 +189,7 @@ to go
     [ set live-neighbors count neighbors with [parqueRecreativo?] ]
   ask patches
     [ if live-neighbors > 0
-      [ cell-media ]]
+      [ cell-alta ]]
 
   ask patches
     [ set live-neighbors count neighbors with [centro?] ]
@@ -233,7 +225,7 @@ to go
     [ ifelse live-neighbors > 0 and baja?
       [ cell-media ]
       [ ifelse live-neighbors > 0 and media?
-        [ cell-media ] 
+        [ cell-alta ] 
         [if live-neighbors > 0 and alta?
           [ cell-alta] ] ] ]
 
