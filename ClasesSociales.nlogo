@@ -232,23 +232,6 @@ to go
   tick
 end
 
-to draw-cells
-  ifelse mouse-down? [
-    if erasing? = 0 [
-      set erasing? [living?] of patch mouse-xcor mouse-ycor
-    ]
-    ask patch mouse-xcor mouse-ycor [
-      ifelse erasing? [
-        cell-death
-      ] [
-        cell-alta
-      ]
-    ]
-    display
-  ] [
-    set erasing? 0
-  ]
-end
 @#$#@#$#@
 GRAPHICS-WINDOW
 285
@@ -293,7 +276,7 @@ initial-density
 HORIZONTAL
 
 BUTTON
-11
+14
 68
 113
 101
@@ -310,7 +293,7 @@ NIL
 1
 
 MONITOR
-11
+14
 248
 135
 293
@@ -321,7 +304,7 @@ count patches with\n  [baja?]\n/ count patches
 11
 
 MONITOR
-11
+14
 300
 135
 293
@@ -332,7 +315,7 @@ count patches with\n  [media?]\n/ count patches
 11
 
 MONITOR
-11
+14
 352
 135
 293
@@ -343,7 +326,7 @@ count patches with\n  [alta?]\n/ count patches
 11
 
 BUTTON
-11
+14
 32
 114
 65
@@ -360,10 +343,10 @@ NIL
 1
 
 BUTTON
-11
-204
+14
+200
 114
-245
+240
 go-once
 go
 NIL
@@ -378,9 +361,9 @@ NIL
 
 BUTTON
 122
-204
-225
-245
+200
+222
+240
 go-forever
 go
 T
