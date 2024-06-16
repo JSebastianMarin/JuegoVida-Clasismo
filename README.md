@@ -55,7 +55,7 @@ En la interfaz de NetLogo, verás tres botones:
 Para cualquier pregunta o sugerencia, por favor abre un issue en GitHub o contacta a cualquiera de los miembros del grupo de estudiantes.
 
 ### Integrantes del grupo
-- Juan Sebastian Marin Serna @JSebastianMarin
-- Juan Pablo Idarraga Pabón @JuanPidarraga
-- Jose Luis Ramos Arango @RamSterB
+- Juan Sebastian Marin Serna  / @JSebastianMarin
+- Juan Pablo Idarraga Pabón  / @JuanPidarraga
+- Jose Luis Ramos Arango    / @RamSterB
 
