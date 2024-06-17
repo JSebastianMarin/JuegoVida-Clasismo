@@ -1,26 +1,26 @@
 patches-own [
-  living?         ;; indica si la celula está viva
-  baja?           ;; indica si la celula es de clase baja
-  media?          ;; indica si la celula es de clase media
-  alta?           ;; indica si la celula es de clase alta
-  colegio?        ;; indica si la celula es un colegio
-  hospital?       ;; indica si la celula es un hospital
-  industria?      ;; indica si la celula es una industria
-  parqueRecreativo? ;; indica si la celula es un parque recreativo
-  centro?         ;; indica si la celula es el centro
-  baja-neighbors  ;; cuantas celulas vecinas son clase baja
-  alta-neighbors  ;; cuantas celulas vecinas son clase alta
-  media-neighbors ;; cuantas celulas vecinas son clase media
-  colegio-neighbors ;; cuantas celulas vecinas son colegios
-  hospital-neighbors ;; cuantas celulas vecinas son hospitales
-  industria-neighbors ;; cuantas celulas vecinas son industrias
-  parqueRecreativo-neighbors ;; cuantas celulas vecinas son parques recreativos
-  centro-neighbors ;; cuantas celulas vecinas son el centro
-  live-neighbors  ;; cuantas celulas vecinas estan vivas
-  ingresos        ;; ingresos de la celula
-  servicios      ;; accesibilidad a servicios de la celula
-  densidad      ;; densidad poblacional de la celula
-  transition-value ;; valor de transición para determinar clase social
+  living?                     ;; indica si la celula está viva
+  baja?                       ;; indica si la celula es de clase baja
+  media?                      ;; indica si la celula es de clase media
+  alta?                       ;; indica si la celula es de clase alta
+  colegio?                    ;; indica si la celula es un colegio
+  hospital?                   ;; indica si la celula es un hospital
+  industria?                  ;; indica si la celula es una industria
+  parqueRecreativo?           ;; indica si la celula es un parque recreativo
+  centro?                     ;; indica si la celula es el centro
+  baja-neighbors              ;; cuantas celulas vecinas son clase baja
+  alta-neighbors              ;; cuantas celulas vecinas son clase alta
+  media-neighbors             ;; cuantas celulas vecinas son clase media
+  colegio-neighbors           ;; cuantas celulas vecinas son colegios
+  hospital-neighbors          ;; cuantas celulas vecinas son hospitales
+  industria-neighbors         ;; cuantas celulas vecinas son industrias
+  parqueRecreativo-neighbors  ;; cuantas celulas vecinas son parques recreativos
+  centro-neighbors            ;; cuantas celulas vecinas son el centro
+  live-neighbors              ;; cuantas celulas vecinas estan vivas
+  ingresos                    ;; ingresos de la celula
+  servicios                   ;; accesibilidad a servicios de la celula
+  densidad                    ;; densidad poblacional de la celula
+  transition-value            ;; valor de transición para determinar clase social
 ]
 
 to setup-blank
@@ -99,8 +99,8 @@ to cell-baja
   set baja? true
   set ingresos 400000
   set servicios 3
-  set densidad 9
-  set transition-value (((ingresos / 100000) + servicios) + densidad)
+  set densidad 3
+  setTransitionValue
   set pcolor pink
 end
 
@@ -109,8 +109,8 @@ to cell-media
   set media? true
   set ingresos 1300000
   set servicios 5
-  set densidad 6
-  set transition-value (((ingresos / 100000) + servicios) + densidad)
+  set densidad 5
+  setTransitionValue
   set pcolor brown
 end
 
@@ -119,38 +119,43 @@ to cell-alta
   set alta? true
   set ingresos 2500000
   set servicios 9
-  set densidad 2
-  set transition-value ((ingresos / 100000) + servicios + densidad)
+  set densidad 9
+  setTransitionValue
   set pcolor blue
 end
 
 to cell-colegio
   reset-cell
   set colegio? true
+  set transition-value 103
   set pcolor yellow
 end
 
 to cell-hospital
   reset-cell
   set hospital? true
+  set transition-value 104
   set pcolor green
 end
 
 to cell-industria
   reset-cell
   set industria? true
+  set transition-value 102
   set pcolor red
 end
 
 to cell-parqueRecreativo
   reset-cell
   set parqueRecreativo? true
+  set transition-value 101
   set pcolor white
 end
 
 to cell-centro
   reset-cell
   set centro? true
+  set transition-value 100
   set pcolor gray
 end
 
@@ -158,6 +163,21 @@ to cell-death
   reset-cell
   set living? false
   set pcolor black
+end
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;FUNCIONES AUXILIARES;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+to setTransitionValue
+  set transition-value ((ingresos / 100000) + servicios + densidad)
+end
+
+
+;;Funcion para asignar a la celula que se mantenga en us estado actual
+to setStay
+  set ingresos ingresos
+  set servicios servicios
+  set densidad densidad
+  setTransitionValue
 end
 
 ;;Definicion reglas de transicion de las celulas
@@ -188,31 +208,49 @@ to transicionClasesPepenismo
 
   ask patches
     [ ifelse ((baja-neighbors >= 5 or media-neighbors <= 4) and baja?)
-      [ set transition-value transition-value + 1 ]
-      [ ifelse ((media-neighbors >= 5 or baja-neighbors <= 4) and baja?)
-        [ set transition-value transition-value + 2 ]
+      [ setStay ]
+      [ ifelse ((media-neighbors >= 1 or baja-neighbors <= 4) and baja?)
+        [ set ingresos ingresos + 900000
+          set servicios servicios + 2
+          set densidad densidad + 2
+          setTransitionValue ]
         [ if ((alta-neighbors >= 5) and baja?)
-          [ set transition-value transition-value + 3 ] ] ] ]
+          [ set ingresos ingresos + 2100000
+            set servicios servicios + 6
+            set densidad densidad + 6
+            setTransitionValue ] ] ] ]
 
 ;; Clase media
 
   ask patches
     [ ifelse ((media-neighbors >= 4 and alta-neighbors >= 3) and media?)
-      [ set transition-value transition-value + 3 ]
+      [ set ingresos ingresos + 1200000
+        set servicios servicios + 4
+        set densidad densidad + 4
+        setTransitionValue ]
       [ ifelse (((baja-neighbors <= 3 or media-neighbors <= 4) or alta-neighbors >= 1) and media?)
-        [ set transition-value transition-value + 2 ]
+        [ setStay ]
         [ if ((baja-neighbors >= 5 and alta-neighbors = 0) and media?)
-          [ set transition-value transition-value + 1 ] ] ] ]
+          [ set ingresos ingresos - 900000
+            set servicios servicios - 2
+            set densidad densidad - 2
+            setTransitionValue  ] ] ] ]
 
 ;; Clase alta
 
   ask patches
     [ ifelse ((baja-neighbors >= 3) and alta?)
-      [ set transition-value transition-value - 2 ]
+      [ set ingresos ingresos - 2100000
+        set servicios servicios - 6
+        set densidad densidad - 6
+        setTransitionValue ]
       [ ifelse ((media-neighbors <= 4 or alta-neighbors >= 2) and alta?)
-        [ set transition-value transition-value + 2 ]
+        [ setStay ]
         [ if ((media-neighbors >= 6 or baja-neighbors >= 3) and alta?)
-          [ set transition-value transition-value + 1 ] ] ] ]
+          [ set ingresos ingresos - 1200000
+            set servicios servicios - 4
+            set densidad densidad - 4
+            setTransitionValue ] ] ] ]
 
 end
 
@@ -224,42 +262,84 @@ to transicionClasesPeperonismo
 
   ask patches
     [ ifelse ((baja-neighbors >= 5 or media-neighbors <= 4) and baja?)
-      [ set transition-value transition-value + 1 ]
+      [ setStay ]
       [ ifelse ((media-neighbors >= 5 or baja-neighbors <= 4) and baja?)
-        [ set transition-value transition-value + 2 ]
+        [ set ingresos ingresos + 900000
+          set servicios servicios + 2
+          set densidad densidad + 2
+          setTransitionValue ]
         [ if ((alta-neighbors >= 5) and baja?)
-          [ set transition-value transition-value + 3 ] ] ] ]
+          [ set ingresos ingresos + 2100000
+            set servicios servicios + 6
+            set densidad densidad + 6
+            setTransitionValue ] ] ] ]
 
 ;; Clase media
   ask patches
     [ ifelse ((media-neighbors >= 4 and alta-neighbors >= 4) and media?)
-      [ set transition-value transition-value + 3 ]
+      [ set ingresos ingresos + 1200000
+        set servicios servicios + 4
+        set densidad densidad + 4
+        setTransitionValue ]
       [ ifelse (((baja-neighbors <= 3 or media-neighbors <= 4) or alta-neighbors >= 1) and media?)
-        [ set transition-value transition-value + 2 ]
+        [ setStay ]
         [ if ((baja-neighbors >= 5 and alta-neighbors = 0) and media?)
-          [ set transition-value transition-value + 1 ] ] ] ]
+          [ set ingresos ingresos - 900000
+            set servicios servicios - 2
+            set densidad densidad - 2
+            setTransitionValue ] ] ] ]
 
 ;; Clase alta
   ask patches
     [ ifelse ((baja-neighbors >= 2) and alta?)
-      [ set transition-value transition-value - 2 ]
+      [ set ingresos ingresos - 2100000
+        set servicios servicios - 6
+        set densidad densidad - 6
+        setTransitionValue ]
       [ ifelse ((media-neighbors <= 4 or alta-neighbors >= 2) and alta?)
-        [ set transition-value transition-value + 2 ]
+        [ setStay ]
         [ if ((media-neighbors >= 3 or baja-neighbors >= 3) and alta?)
-          [ set transition-value transition-value + 1 ] ] ] ]
+          [ set ingresos ingresos - 1200000
+            set servicios servicios - 4
+            set densidad densidad - 4
+            setTransitionValue ] ] ] ]
 
 end
 
 to assign-class-based-on-attributes
   ask patches [
-    if transition-value >= 30 [
-      cell-alta
+    if transition-value >= 35 [
+      set media? false
+      set baja? false
+      set alta? true
+      set pcolor blue
     ]
-    if transition-value >= 20 and transition-value < 30 [
-      cell-media
+    if transition-value >= 20 and transition-value < 35 [
+      set media? true
+      set baja? false
+      set alta? false
+      set pcolor brown
     ]
     if transition-value < 20 [
-      cell-baja
+      set media? false
+      set baja? true
+      set alta? false
+      set pcolor pink
+    ]
+    if transition-value = 100 [
+      cell-centro  
+    ]
+    if transition-value = 101 [
+      cell-parqueRecreativo
+    ]
+    if transition-value = 102 [
+      cell-industria
+    ]
+    if transition-value = 103 [
+      cell-colegio
+    ]
+    if transition-value = 104 [
+      cell-hospital
     ]
   ]
 end
@@ -323,11 +403,11 @@ ifelse (politica)
   [ transicionClasesPeperonismo ]
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;Reglas de transicion para servicios;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
+  assign-class-based-on-attributes
   transicionClasesCercaSevicios
 
 ;; Asignación de clases basada en los atributos de transición
-  assign-class-based-on-attributes
+  
 
   tick
 end
