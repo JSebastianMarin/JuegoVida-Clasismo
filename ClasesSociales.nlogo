@@ -17,7 +17,10 @@ patches-own [
   parqueRecreativo-neighbors ;; cuantas celulas vecinas son parques recreativos
   centro-neighbors ;; cuantas celulas vecinas son el centro
   live-neighbors  ;; cuantas celulas vecinas estan vivas
-
+  ingresos        ;; ingresos de la celula
+  servicios      ;; accesibilidad a servicios de la celula
+  densidad      ;; densidad poblacional de la celula
+  transition-value ;; valor de transición para determinar clase social
 ]
 
 to setup-blank
@@ -94,18 +97,30 @@ end
 to cell-baja
   reset-cell
   set baja? true
+  set ingresos 400000
+  set servicios 3
+  set densidad 9
+  set transition-value (((ingresos / 100000) + servicios) + densidad)
   set pcolor pink
 end
 
 to cell-media
   reset-cell
   set media? true
+  set ingresos 1300000
+  set servicios 5
+  set densidad 6
+  set transition-value (((ingresos / 100000) + servicios) + densidad)
   set pcolor brown
 end
 
 to cell-alta
   reset-cell
   set alta? true
+  set ingresos 2500000
+  set servicios 9
+  set densidad 2
+  set transition-value ((ingresos / 100000) + servicios + densidad)
   set pcolor blue
 end
 
@@ -173,31 +188,31 @@ to transicionClasesPepenismo
 
   ask patches
     [ ifelse ((baja-neighbors >= 5 or media-neighbors <= 4) and baja?)
-      [ cell-baja ]
+      [ set transition-value transition-value + 1 ]
       [ ifelse ((media-neighbors >= 5 or baja-neighbors <= 4) and baja?)
-        [ cell-media ]
+        [ set transition-value transition-value + 2 ]
         [ if ((alta-neighbors >= 5) and baja?)
-          [ cell-alta ] ] ] ]
+          [ set transition-value transition-value + 3 ] ] ] ]
 
 ;; Clase media
 
   ask patches
     [ ifelse ((media-neighbors >= 4 and alta-neighbors >= 3) and media?)
-      [ cell-alta ]
+      [ set transition-value transition-value + 3 ]
       [ ifelse (((baja-neighbors <= 3 or media-neighbors <= 4) or alta-neighbors >= 1) and media?)
-        [ cell-media ]
+        [ set transition-value transition-value + 2 ]
         [ if ((baja-neighbors >= 5 and alta-neighbors = 0) and media?)
-          [ cell-baja ] ] ] ]
+          [ set transition-value transition-value + 1 ] ] ] ]
 
 ;; Clase alta
 
   ask patches
     [ ifelse ((baja-neighbors >= 3) and alta?)
-      [ cell-baja ]
+      [ set transition-value transition-value - 2 ]
       [ ifelse ((media-neighbors <= 4 or alta-neighbors >= 2) and alta?)
-        [ cell-alta ]
+        [ set transition-value transition-value + 2 ]
         [ if ((media-neighbors >= 6 or baja-neighbors >= 3) and alta?)
-          [ cell-media ] ] ] ]
+          [ set transition-value transition-value + 1 ] ] ] ]
 
 end
 
@@ -209,30 +224,44 @@ to transicionClasesPeperonismo
 
   ask patches
     [ ifelse ((baja-neighbors >= 5 or media-neighbors <= 4) and baja?)
-      [ cell-baja ]
+      [ set transition-value transition-value + 1 ]
       [ ifelse ((media-neighbors >= 5 or baja-neighbors <= 4) and baja?)
-        [ cell-media ]
+        [ set transition-value transition-value + 2 ]
         [ if ((alta-neighbors >= 5) and baja?)
-          [ cell-alta ] ] ] ]
+          [ set transition-value transition-value + 3 ] ] ] ]
 
 ;; Clase media
   ask patches
     [ ifelse ((media-neighbors >= 4 and alta-neighbors >= 4) and media?)
-      [ cell-alta ]
+      [ set transition-value transition-value + 3 ]
       [ ifelse (((baja-neighbors <= 3 or media-neighbors <= 4) or alta-neighbors >= 1) and media?)
-        [ cell-media ]
+        [ set transition-value transition-value + 2 ]
         [ if ((baja-neighbors >= 5 and alta-neighbors = 0) and media?)
-          [ cell-baja ] ] ] ]
+          [ set transition-value transition-value + 1 ] ] ] ]
 
 ;; Clase alta
   ask patches
     [ ifelse ((baja-neighbors >= 2) and alta?)
-      [ cell-baja ]
+      [ set transition-value transition-value - 2 ]
       [ ifelse ((media-neighbors <= 4 or alta-neighbors >= 2) and alta?)
-        [ cell-alta ]
+        [ set transition-value transition-value + 2 ]
         [ if ((media-neighbors >= 3 or baja-neighbors >= 3) and alta?)
-          [ cell-media ] ] ] ]
+          [ set transition-value transition-value + 1 ] ] ] ]
 
+end
+
+to assign-class-based-on-attributes
+  ask patches [
+    if transition-value >= 30 [
+      cell-alta
+    ]
+    if transition-value >= 20 and transition-value < 30 [
+      cell-media
+    ]
+    if transition-value < 20 [
+      cell-baja
+    ]
+  ]
 end
 
 to transicionClasesCercaSevicios
@@ -289,7 +318,7 @@ to go
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;Reglas de transicion para cada clase;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-ifelse (politica)
+ifelse (politica) 
   [ transicionClasesPepenismo ]
   [ transicionClasesPeperonismo ]
 
@@ -297,8 +326,12 @@ ifelse (politica)
 
   transicionClasesCercaSevicios
 
+;; Asignación de clases basada en los atributos de transición
+  assign-class-based-on-attributes
+
   tick
 end
+
 @#$#@#$#@
 GRAPHICS-WINDOW
 285
@@ -455,7 +488,7 @@ POLITICA
 -1000
 
 TEXTBOX
-17
+14
 117
 167
 145
@@ -477,25 +510,17 @@ Además, hay celdas especiales que representan hospitales, colegios, centros rec
 
 ## HOW TO USE IT
 
-**1. Generar la Población Inicial:**
-    
-    * Haz clic en `setup-random`.
+1. **Generar la Población Inicial:**
 
-**2. Configurar las Políticas:**
+    - Haz clic en setup-random.
 
-    * Ajustar el interruptor de políticas (`switch`) según el comportaiento deseado:
+2. **Ejecutar Transiciones Manualmente:**
 
-        - `ON`: Promueve la expansión de la clase media.
-       - `OFF`: La clase alta desaparece.
+    - Haz clic en go-once para observar la evolución de la sociedad paso a paso.
 
-**3. Ejecutar Transiciones Manualmente:**
+3. **Ejecutar Transiciones Automáticamente:**
 
-    - Haz clic en `go-once` para observar la evolución de la sociedad paso a paso.
-
-**4. Ejecutar Transiciones Automáticamente:**
-
-    - Haz clic en `go-forever` para ver la evolución continua de la sociedad.
-   - Cambiar el estado del interruptor de políticas durante esta ejecución pausará el desarrollo de la sociedad.
+    - Haz clic en go-forever para ver la evolución continua de la sociedad.
 
 ## THINGS TO NOTICE
 
