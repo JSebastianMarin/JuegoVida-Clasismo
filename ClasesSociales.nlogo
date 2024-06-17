@@ -276,7 +276,7 @@ to transicionClasesPeperonismo
 
 ;; Clase media
   ask patches
-    [ ifelse ((media-neighbors >= 4 and alta-neighbors >= 3) and media?)
+    [ ifelse ((media-neighbors >= 4 and alta-neighbors >= 4) and media?)
       [ set ingresos ingresos + 200000
         set servicios servicios + 1
         set densidad densidad + 1
