@@ -14,10 +14,10 @@ En este proyecto, cada célula del autómata tiene los siguientes atributos:
 - `colegio?`: Indica si es una célula de tipo colegio.
 - `centro?`: Indica si es una célula de tipo centro.
 - `recreativo?`: Indica si es una célula de tipo recreativo.
-- `ingresos`: ingresos de la celula
-- `servicios`: accesibilidad a servicios de la celula
-- `densidad`: densidad poblacional de la celula
-- `transition-value`: valor de transición para determinar clase social
+- `ingresos`: ingresos de la celula.
+- `servicios`: accesibilidad a servicios de la celula.
+- `densidad`: densidad poblacional de la celula.
+- `transition-value`: valor de transición para determinar clase social.
 
 ## Instrucciones de Uso
 
