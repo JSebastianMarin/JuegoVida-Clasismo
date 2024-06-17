@@ -232,7 +232,7 @@ to transicionClasesPepenismo
         [ setStay ]
         [ if ((baja-neighbors >= 5 and alta-neighbors = 0) and media?)
           [ set ingresos ingresos - 900000
-            set servicios servicios - 2
+            set servicios servicios - 1
             set densidad densidad - 2
             setTransitionValue  ] ] ] ]
 
@@ -403,11 +403,12 @@ ifelse (politica)
   [ transicionClasesPeperonismo ]
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;Reglas de transicion para servicios;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-  assign-class-based-on-attributes
+  
   transicionClasesCercaSevicios
 
 ;; Asignación de clases basada en los atributos de transición
-  
+
+  assign-class-based-on-attributes
 
   tick
 end
@@ -475,7 +476,7 @@ NIL
 MONITOR
 14
 248
-135
+145
 293
 Densidad de clase baja
 count patches with\n  [baja?]\n/ count patches
@@ -486,7 +487,7 @@ count patches with\n  [baja?]\n/ count patches
 MONITOR
 14
 300
-135
+145
 345
 Densidad de clase media
 count patches with\n  [media?]\n/ count patches
@@ -497,7 +498,7 @@ count patches with\n  [media?]\n/ count patches
 MONITOR
 14
 352
-135
+145
 397
 Densidad de clase alta
 count patches with\n  [alta?]\n/ count patches
@@ -572,7 +573,7 @@ TEXTBOX
 117
 167
 145
-Off = Malas politicas\nOn = Buenas politicas
+On = PEPENISMO\nOff = PEPERONISMO
 11
 0.0
 1
