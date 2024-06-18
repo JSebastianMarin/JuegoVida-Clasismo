@@ -1,36 +1,59 @@
-patches-own [
-  living?                     ;; indica si la celula está viva
-  baja?                       ;; indica si la celula es de clase baja
-  media?                      ;; indica si la celula es de clase media
-  alta?                       ;; indica si la celula es de clase alta
-  colegio?                    ;; indica si la celula es un colegio
-  hospital?                   ;; indica si la celula es un hospital
-  industria?                  ;; indica si la celula es una industria
-  parqueRecreativo?           ;; indica si la celula es un parque recreativo
-  centro?                     ;; indica si la celula es el centro
-  baja-neighbors              ;; cuantas celulas vecinas son clase baja
-  alta-neighbors              ;; cuantas celulas vecinas son clase alta
-  media-neighbors             ;; cuantas celulas vecinas son clase media
-  colegio-neighbors           ;; cuantas celulas vecinas son colegios
-  hospital-neighbors          ;; cuantas celulas vecinas son hospitales
-  industria-neighbors         ;; cuantas celulas vecinas son industrias
-  parqueRecreativo-neighbors  ;; cuantas celulas vecinas son parques recreativos
-  centro-neighbors            ;; cuantas celulas vecinas son el centro
-  live-neighbors              ;; cuantas celulas vecinas estan vivas
-  ingresos                    ;; ingresos de la celula
-  servicios                   ;; accesibilidad a servicios de la celula
-  densidad                    ;; densidad poblacional de la celula
-  transition-value            ;; valor de transición para determinar clase social
+globals [
+  info-clase          ;; Información de la clase de la celda
+  info-ingreso        ;; Información de los ingresos de la celda
+  info-servicios      ;; Información de los servicios de la celda
+  info-densidad       ;; Información de la densidad de la celda
+  politicas-ingresos  ;; Valor de las políticas de ingresos
+  politicas-servicios ;; Valor de las políticas de servicios
+  politicas-densidad  ;; Valor de las políticas de densidad poblacional
 ]
 
+patches-own [
+  living?                     ;; Indica si la celula está viva
+  baja?                       ;; Indica si la celula es de clase baja
+  media?                      ;; Indica si la celula es de clase media
+  alta?                       ;; Indica si la celula es de clase alta
+  colegio?                    ;; Indica si la celula es un colegio
+  hospital?                   ;; Indica si la celula es un hospital
+  industria?                  ;; Indica si la celula es una industria
+  parqueRecreativo?           ;; Indica si la celula es un parque recreativo
+  centro?                     ;; Indica si la celula es el centro
+  baja-neighbors              ;; Cuantas celulas vecinas son clase baja
+  alta-neighbors              ;; Cuantas celulas vecinas son clase alta
+  media-neighbors             ;; Cuantas celulas vecinas son clase media
+  colegio-neighbors           ;; Cuantas celulas vecinas son colegios
+  hospital-neighbors          ;; Cuantas celulas vecinas son hospitales
+  industria-neighbors         ;; Cuantas celulas vecinas son industrias
+  parqueRecreativo-neighbors  ;; Cuantas celulas vecinas son parques recreativos
+  centro-neighbors            ;; Cuantas celulas vecinas son el centro
+  live-neighbors              ;; Cuantas celulas vecinas estan vivas
+  ingresos                    ;; Ingresos de la celula
+  servicios                   ;; Accesibilidad a servicios de la celula
+  densidad                    ;; Densidad poblacional de la celula
+  transition-value            ;; Valor de transición para determinar clase social
+]
+
+;;Para settear el mundo en blanco
 to setup-blank
   clear-all
   ask patches [ cell-death ]
   reset-ticks
 end
 
+;;Para settear el mundo con valores aleatorios
 to setup-random
   clear-all
+
+  ;; Inicializar las variables para la información de la etiqueta
+  set info-clase ""
+  set info-ingreso ""
+  set info-servicios ""
+  set info-densidad ""
+  
+  ;; Inicializar las variables para las políticas
+  set politicas-ingresos 1
+  set politicas-servicios 1
+  set politicas-densidad 1
 
   ;; Asignar parqueRecreativo
   ask patches [
@@ -93,7 +116,9 @@ to reset-cell
   set living? true
 end
 
-;;Definicion de las celulas
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;Definicion de las celulas;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+;;Definicion de celulas clases
 to cell-baja
   reset-cell
   set baja? true
@@ -101,7 +126,7 @@ to cell-baja
   set servicios 3
   set densidad 3
   setTransitionValue
-  set pcolor pink
+  set pcolor pink + 1
 end
 
 to cell-media
@@ -123,6 +148,8 @@ to cell-alta
   setTransitionValue
   set pcolor blue
 end
+
+;;Definicion de celulas servicios
 
 to cell-colegio
   reset-cell
@@ -159,20 +186,41 @@ to cell-centro
   set pcolor gray
 end
 
+;;Definicion de celulas muertas
 to cell-death
   reset-cell
   set living? false
   set pcolor black
 end
 
+;; Procedimiento para actualizar la etiqueta con la información del parche
+to update-info-label
+  if mouse-inside? [
+    let patch-under-mouse patch mouse-xcor mouse-ycor
+    set info-clase (word "Clase: "
+                   (ifelse-value [baja?] of patch-under-mouse [ "Baja" ]
+                     [media?] of patch-under-mouse [ "Media" ]
+                     [alta?] of patch-under-mouse [ "Alta" ]
+                     [centro?] of patch-under-mouse [ "Centro" ]
+                     [colegio?] of patch-under-mouse [ "Colegio" ]
+                     [hospital?] of patch-under-mouse [ "Hospital" ]
+                     [industria?] of patch-under-mouse [ "Industria" ]
+                     [parqueRecreativo?] of patch-under-mouse [ "Parque Recreativo" ]
+                     [ "None" ]))
+    set info-ingreso (word "Ingresos: " [ingresos] of patch-under-mouse)
+    set info-servicios (word "Servicios: " [servicios] of patch-under-mouse)
+    set info-densidad  (word "Densidad: " [densidad] of patch-under-mouse)
+  ]
+end
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;FUNCIONES AUXILIARES;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
+;;Funcion para calcular el transitionvalue
 to setTransitionValue
   set transition-value ((ingresos / 100000) + servicios + densidad)
 end
 
-
-;;Funcion para asignar a la celula que se mantenga en us estado actual
+;;Funcion para asignar a la celula que se mantenga en su estado actual
 to setStay
   set ingresos ingresos
   set servicios servicios
@@ -180,12 +228,9 @@ to setStay
   setTransitionValue
 end
 
-;;Definicion reglas de transicion de las celulas
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;SETTERS;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;SETTERS DE CONTADORES;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 to setterClasesYServicios
-
   ask patches
       [
         set baja-neighbors count neighbors with [baja?]
@@ -197,114 +242,85 @@ to setterClasesYServicios
         set industria-neighbors count neighbors with [industria?]
         set parqueRecreativo-neighbors count neighbors with [parqueRecreativo?]
       ]
-
 end
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;REGLAS PEPENISMO;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;REGLAS TRANCISION;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-to transicionClasesPepenismo
+to transicionClases
 
   ;; Clase baja
-
   ask patches
-    [ ifelse ((baja-neighbors >= 5 or media-neighbors <= 4) and baja?)
+    [ ifelse ((baja-neighbors >= 4 or media-neighbors <= 4) and baja?)
       [ setStay ]
       [ ifelse ((media-neighbors >= 1 or baja-neighbors <= 4) and baja?)
-        [ set ingresos ingresos + 900000
-          set servicios servicios + 2
-          set densidad densidad + 2
+        [ set ingresos ingresos + 200000 * politicas-ingresos
+          set servicios servicios + 1 * politicas-servicios
+          set densidad densidad + 1 * politicas-densidad
           setTransitionValue ]
         [ if ((alta-neighbors >= 5) and baja?)
-          [ set ingresos ingresos + 2100000
-            set servicios servicios + 6
-            set densidad densidad + 6
+          [ set ingresos ingresos + 1000000 * politicas-ingresos
+            set servicios servicios + 3 * politicas-servicios
+            set densidad densidad + 3 * politicas-densidad
             setTransitionValue ] ] ] ]
 
 ;; Clase media
-
   ask patches
     [ ifelse ((media-neighbors >= 4 and alta-neighbors >= 3) and media?)
-      [ set ingresos ingresos + 1200000
-        set servicios servicios + 4
-        set densidad densidad + 4
+      [ set ingresos ingresos + 800000 *  politicas-ingresos
+        set servicios servicios + 3 * politicas-servicios
+        set densidad densidad + 3 * politicas-densidad
         setTransitionValue ]
       [ ifelse (((baja-neighbors <= 3 or media-neighbors <= 4) or alta-neighbors >= 1) and media?)
         [ setStay ]
         [ if ((baja-neighbors >= 5 and alta-neighbors = 0) and media?)
-          [ set ingresos ingresos - 900000
-            set servicios servicios - 1
-            set densidad densidad - 2
+          [ set ingresos ingresos - 600000 * politicas-ingresos
+            set servicios servicios - 2 * politicas-servicios
+            set densidad densidad - 2 * politicas-densidad
             setTransitionValue  ] ] ] ]
 
 ;; Clase alta
-
   ask patches
     [ ifelse ((baja-neighbors >= 3) and alta?)
-      [ set ingresos ingresos - 2100000
-        set servicios servicios - 6
-        set densidad densidad - 6
+      [ set ingresos ingresos - 1500000 * politicas-ingresos
+        set servicios servicios - 4 * politicas-servicios
+        set densidad densidad - 4 * politicas-densidad
         setTransitionValue ]
       [ ifelse ((media-neighbors <= 4 or alta-neighbors >= 2) and alta?)
         [ setStay ]
         [ if ((media-neighbors >= 6 or baja-neighbors >= 3) and alta?)
-          [ set ingresos ingresos - 1200000
-            set servicios servicios - 4
-            set densidad densidad - 4
+          [ set ingresos ingresos - 800000 * politicas-ingresos
+            set servicios servicios - 3 * politicas-servicios
+            set densidad densidad - 3 * politicas-densidad
             setTransitionValue ] ] ] ]
-
 end
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;REGLAS PEPERONISMO;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;POLITICAS;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-to transicionClasesPeperonismo
-
-  ;; Clase baja
-
-  ask patches
-    [ ifelse ((baja-neighbors >= 3 or media-neighbors <= 5) and baja?)
-      [ setStay ]
-      [ ifelse ((media-neighbors >= 1 or baja-neighbors <= 4) and baja?)
-        [ set ingresos ingresos + 400000
-          set servicios servicios + 2
-          set densidad densidad + 2
-          setTransitionValue ]
-        [ if ((alta-neighbors >= 5) and baja?)
-          [ set ingresos ingresos + 1100000
-            set servicios servicios + 6
-            set densidad densidad + 6
-            setTransitionValue ] ] ] ]
-
-;; Clase media
-  ask patches
-    [ ifelse ((media-neighbors >= 4 and alta-neighbors >= 4) and media?)
-      [ set ingresos ingresos + 200000
-        set servicios servicios + 1
-        set densidad densidad + 1
-        setTransitionValue ]
-      [ ifelse (baja-neighbors >= 7 and media?)
-        [ set ingresos ingresos - 400000
-          set servicios servicios - 3
-          set densidad densidad - 3
-          setTransitionValue ]
-        [ if (((baja-neighbors <= 5 or media-neighbors >= 7) or alta-neighbors >= 1) and media?)
-          [ setStay ] ] ] ]
-
-;; Clase alta
-  ask patches
-    [ ifelse ((baja-neighbors >= 2) and alta?)
-      [ set ingresos ingresos - 1100000
-        set servicios servicios - 4
-        set densidad densidad - 4
-        setTransitionValue ]
-      [ ifelse ((media-neighbors <= 4 or alta-neighbors >= 2) and alta?)
-        [ setStay ]
-        [ if ((media-neighbors >= 3 or baja-neighbors >= 3) and alta?)
-          [ set ingresos ingresos - 800000
-            set servicios servicios - 3
-            set densidad densidad - 3
-            setTransitionValue ] ] ] ]
-
+to politica-pepecismo
+  set politicas-ingresos politicas-ingresos * 0.5
+  set politicas-servicios politicas-servicios * 1.5
+  set politicas-densidad politicas-densidad * 1.5
 end
+
+to politica-peperonismo
+  set politicas-ingresos politicas-ingresos * 0.2
+  set politicas-servicios politicas-servicios * 0.5
+  set politicas-densidad politicas-densidad * 0.5
+end
+
+to politica-pepenismo
+  set politicas-ingresos politicas-ingresos * 2
+  set politicas-servicios politicas-servicios * 2
+  set politicas-densidad politicas-densidad * 2
+end
+
+to ninguna
+  set politicas-ingresos politicas-ingresos * 1
+  set politicas-servicios politicas-servicios * 1
+  set politicas-densidad politicas-densidad * 1
+end
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;ASIGNACION DE CLASES;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 to assign-class-based-on-attributes
   ask patches [
@@ -320,14 +336,17 @@ to assign-class-based-on-attributes
       set alta? false
       set pcolor brown
     ]
-    if transition-value < 20 [
+    if transition-value < 20 and transition-value > 1 [
       set media? false
       set baja? true
       set alta? false
-      set pcolor pink
+      set pcolor pink + 1
+    ]
+    if transition-value <= 1 [
+      cell-death
     ]
     if transition-value = 100 [
-      cell-centro  
+      cell-centro
     ]
     if transition-value = 101 [
       cell-parqueRecreativo
@@ -344,28 +363,26 @@ to assign-class-based-on-attributes
   ]
 end
 
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;SERVICIOS;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
 to transicionClasesCercaSevicios
 
   ;; Parques recreativos
-
     ask patches
       [ if parqueRecreativo-neighbors > 0
           [ cell-alta ] ]
 
   ;; Parques centro
-
     ask patches
       [ if centro-neighbors > 0
         [ cell-media ] ]
 
   ;; Industria
-
     ask patches
       [ if industria-neighbors > 0
         [ cell-baja ] ]
 
   ;; Colegios
-
     ask patches
       [ if colegio-neighbors > 0 and baja?
         [ cell-media ] ]
@@ -374,7 +391,6 @@ to transicionClasesCercaSevicios
         [ cell-media ] ]
 
   ;; Hospitales
-
     ask patches
       [ ifelse hospital-neighbors > 0 and baja?
         [ cell-media ]
@@ -382,42 +398,47 @@ to transicionClasesCercaSevicios
           [ cell-alta ]
           [ if hospital-neighbors > 0 and alta?
             [ cell-alta ] ] ] ]
-
 end
 
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;EJECUCION;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+;;Actualizar la etiqueta con la información del parche
+to go-label
+  update-info-label
+end
 
 ;;Ejecucion reglas de transicion de las celulas
-
 to go
 
 ;;Setting los contadores de vecinos de cada clase y servicios cercanos
-
   setterClasesYServicios
 
+;;Ejecucion de las reglas de transicion
+  transicionClases
+
 ;; Procedimientos para el switch de politica
+  if (politica = "Ninguna")
+    [ ninguna ]
+  if (politica = "peperonismo")
+    [ politica-peperonismo ]
+ if (politica = "pepenismo")
+   [ politica-pepenismo ]	
+  if (politica = "pepecismo")
+    [ politica-pepecismo ]
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;Reglas de transicion para cada clase;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
-ifelse (politica) 
-  [ transicionClasesPepenismo ]
-  [ transicionClasesPeperonismo ]
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;Reglas de transicion para servicios;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-  
+;;Ejecucion de las reglas de transicion de los servicios
   transicionClasesCercaSevicios
 
 ;; Asignación de clases basada en los atributos de transición
-
   assign-class-based-on-attributes
 
   tick
 end
-
 @#$#@#$#@
 GRAPHICS-WINDOW
-285
+300
 10
-697
+712
 423
 -1
 -1
@@ -442,10 +463,10 @@ ticks
 15.0
 
 SLIDER
-120
-67
-276
-100
+150
+20
+281
+53
 initial-density
 initial-density
 0.0
@@ -458,9 +479,9 @@ HORIZONTAL
 
 BUTTON
 14
-68
-113
-101
+65
+145
+105
 NIL
 setup-random
 NIL
@@ -474,10 +495,10 @@ NIL
 1
 
 MONITOR
-14
-248
-145
-293
+13
+229
+144
+274
 Densidad de clase baja
 count patches with\n  [baja?]\n/ count patches
 5
@@ -485,10 +506,10 @@ count patches with\n  [baja?]\n/ count patches
 11
 
 MONITOR
-14
-300
-145
-345
+13
+280
+144
+325
 Densidad de clase media
 count patches with\n  [media?]\n/ count patches
 5
@@ -496,10 +517,10 @@ count patches with\n  [media?]\n/ count patches
 11
 
 MONITOR
-14
-352
-145
-397
+13
+333
+144
+378
 Densidad de clase alta
 count patches with\n  [alta?]\n/ count patches
 5
@@ -508,9 +529,9 @@ count patches with\n  [alta?]\n/ count patches
 
 BUTTON
 14
-32
-114
-65
+20
+145
+60
 NIL
 setup-blank
 NIL
@@ -524,10 +545,10 @@ NIL
 1
 
 BUTTON
-14
-200
-114
-240
+13
+180
+144
+220
 go-once
 go
 NIL
@@ -541,10 +562,10 @@ NIL
 0
 
 BUTTON
-122
-200
-222
-240
+149
+180
+280
+220
 go-forever
 go
 T
@@ -557,26 +578,116 @@ NIL
 NIL
 0
 
-SWITCH
-14
-152
-123
-185
-POLITICA
-POLITICA
-1
-1
--1000
-
 TEXTBOX
+149
+249
+298
+269
+Celulas de color rosado
 14
-117
-167
-145
-On = PEPENISMO\nOff = PEPERONISMO
-11
 0.0
 1
+
+TEXTBOX
+149
+302
+299
+320
+Celulas de color cafe
+14
+0.0
+1
+
+TEXTBOX
+149
+352
+301
+370
+Celulas de colo azul
+14
+0.0
+1
+
+TEXTBOX
+155
+61
+310
+166
+Verde = Hospitales\nAmarillo = Colegios\nRojo = Industrias\nBlanco = Parque recreativo\nGris = Centro
+14
+0.0
+1
+
+MONITOR
+732
+20
+844
+65
+Clase
+info-clase
+17
+1
+11
+
+BUTTON
+732
+220
+844
+260
+Iniciar info-label
+go-label
+T
+1
+T
+OBSERVER
+NIL
+NIL
+NIL
+NIL
+1
+
+MONITOR
+732
+70
+844
+115
+Ingresos
+info-ingreso
+17
+1
+11
+
+MONITOR
+733
+170
+844
+215
+Densidad
+info-densidad
+17
+1
+11
+
+MONITOR
+733
+120
+844
+165
+Servicios
+info-servicios
+17
+1
+11
+
+CHOOSER
+14
+119
+141
+164
+POLITICA
+POLITICA
+"ninguna" "peperonismo" "pepenismo" "pepecismo"
+0
 
 @#$#@#$#@
 ## WHAT IS IT?
