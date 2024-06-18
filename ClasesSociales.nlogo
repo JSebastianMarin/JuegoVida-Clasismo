@@ -3,9 +3,7 @@ globals [
   info-ingreso        ;; Información de los ingresos de la celda
   info-servicios      ;; Información de los servicios de la celda
   info-densidad       ;; Información de la densidad de la celda
-  politicas-ingresos  ;; Valor de las políticas de ingresos
-  politicas-servicios ;; Valor de las políticas de servicios
-  politicas-densidad  ;; Valor de las políticas de densidad poblacional
+  aleatorio          ;; Variable para generar valores aleatorios
 ]
 
 patches-own [
@@ -49,11 +47,9 @@ to setup-random
   set info-ingreso ""
   set info-servicios ""
   set info-densidad ""
-  
+  set aleatorio random 10
+
   ;; Inicializar las variables para las políticas
-  set politicas-ingresos 1
-  set politicas-servicios 1
-  set politicas-densidad 1
 
   ;; Asignar parqueRecreativo
   ask patches [
@@ -154,35 +150,35 @@ end
 to cell-colegio
   reset-cell
   set colegio? true
-  set transition-value 103
+  set transition-value -4
   set pcolor yellow
 end
 
 to cell-hospital
   reset-cell
   set hospital? true
-  set transition-value 104
+  set transition-value -5
   set pcolor green
 end
 
 to cell-industria
   reset-cell
   set industria? true
-  set transition-value 102
+  set transition-value -3
   set pcolor red
 end
 
 to cell-parqueRecreativo
   reset-cell
   set parqueRecreativo? true
-  set transition-value 101
+  set transition-value -2
   set pcolor white
 end
 
 to cell-centro
   reset-cell
   set centro? true
-  set transition-value 100
+  set transition-value -1
   set pcolor gray
 end
 
@@ -220,14 +216,6 @@ to setTransitionValue
   set transition-value ((ingresos / 100000) + servicios + densidad)
 end
 
-;;Funcion para asignar a la celula que se mantenga en su estado actual
-to setStay
-  set ingresos ingresos
-  set servicios servicios
-  set densidad densidad
-  setTransitionValue
-end
-
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;SETTERS DE CONTADORES;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 to setterClasesYServicios
@@ -244,80 +232,213 @@ to setterClasesYServicios
       ]
 end
 
+to setStay
+  set ingresos ingresos
+  set servicios servicios
+  set densidad densidad
+  setTransitionValue
+end
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;REGLAS TRANCISION;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 to transicionClases
 
   ;; Clase baja
   ask patches
-    [ ifelse ((baja-neighbors >= 4 or media-neighbors <= 4) and baja?)
+    [ ifelse ((baja-neighbors >= 5 or media-neighbors <= 4) and baja?)
       [ setStay ]
       [ ifelse ((media-neighbors >= 1 or baja-neighbors <= 4) and baja?)
-        [ set ingresos ingresos + 200000 * politicas-ingresos
-          set servicios servicios + 1 * politicas-servicios
-          set densidad densidad + 1 * politicas-densidad
+        [ set ingresos ingresos + 900000
+          set servicios servicios + 2
+          set densidad densidad + 2
           setTransitionValue ]
         [ if ((alta-neighbors >= 5) and baja?)
-          [ set ingresos ingresos + 1000000 * politicas-ingresos
-            set servicios servicios + 3 * politicas-servicios
-            set densidad densidad + 3 * politicas-densidad
+          [ set ingresos ingresos + 2100000
+            set servicios servicios + 6
+            set densidad densidad + 6
             setTransitionValue ] ] ] ]
 
 ;; Clase media
   ask patches
     [ ifelse ((media-neighbors >= 4 and alta-neighbors >= 3) and media?)
-      [ set ingresos ingresos + 800000 *  politicas-ingresos
-        set servicios servicios + 3 * politicas-servicios
-        set densidad densidad + 3 * politicas-densidad
+      [ set ingresos ingresos + 1200000
+        set servicios servicios + 4
+        set densidad densidad + 4
         setTransitionValue ]
       [ ifelse (((baja-neighbors <= 3 or media-neighbors <= 4) or alta-neighbors >= 1) and media?)
         [ setStay ]
         [ if ((baja-neighbors >= 5 and alta-neighbors = 0) and media?)
-          [ set ingresos ingresos - 600000 * politicas-ingresos
-            set servicios servicios - 2 * politicas-servicios
-            set densidad densidad - 2 * politicas-densidad
-            setTransitionValue  ] ] ] ]
+          [ set ingresos ingresos - 900000
+            set servicios servicios - 2
+            set densidad densidad - 2
+            setTransitionValue ] ] ] ]
 
 ;; Clase alta
   ask patches
     [ ifelse ((baja-neighbors >= 3) and alta?)
-      [ set ingresos ingresos - 1500000 * politicas-ingresos
-        set servicios servicios - 4 * politicas-servicios
-        set densidad densidad - 4 * politicas-densidad
+      [ set ingresos ingresos - 2100000
+        set servicios servicios - 6
+        set densidad densidad - 6
         setTransitionValue ]
       [ ifelse ((media-neighbors <= 4 or alta-neighbors >= 2) and alta?)
         [ setStay ]
         [ if ((media-neighbors >= 6 or baja-neighbors >= 3) and alta?)
-          [ set ingresos ingresos - 800000 * politicas-ingresos
-            set servicios servicios - 3 * politicas-servicios
-            set densidad densidad - 3 * politicas-densidad
+          [ set ingresos ingresos - 1200000
+            set servicios servicios - 4
+            set densidad densidad - 4
             setTransitionValue ] ] ] ]
 end
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;POLITICAS;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-to politica-pepecismo
-  set politicas-ingresos politicas-ingresos * 0.5
-  set politicas-servicios politicas-servicios * 1.5
-  set politicas-densidad politicas-densidad * 1.5
-end
-
 to politica-peperonismo
-  set politicas-ingresos politicas-ingresos * 0.2
-  set politicas-servicios politicas-servicios * 0.5
-  set politicas-densidad politicas-densidad * 0.5
+
+  ;; Clase baja
+
+  ask patches
+    [ ifelse ((baja-neighbors >= 3 or media-neighbors <= 5) and baja?)
+      [ setStay ]
+      [ ifelse ((media-neighbors >= 1 or baja-neighbors <= 4) and baja?)
+        [ set ingresos ingresos + 400000
+          set servicios servicios + 2
+          set densidad densidad + 2
+          setTransitionValue ]
+        [ if ((alta-neighbors >= 5) and baja?)
+          [ set ingresos ingresos + 1100000
+            set servicios servicios + 6
+            set densidad densidad + 6
+            setTransitionValue ] ] ] ]
+
+;; Clase media
+  ask patches
+    [ ifelse ((media-neighbors >= 4 and alta-neighbors >= 4) and media?)
+      [ set ingresos ingresos + 200000
+        set servicios servicios + 1
+        set densidad densidad + 1
+        setTransitionValue ]
+      [ ifelse (baja-neighbors >= 7 and media?)
+        [ set ingresos ingresos - 400000
+          set servicios servicios - 3
+          set densidad densidad - 3
+          setTransitionValue ]
+        [ if (((baja-neighbors <= 5 or media-neighbors >= 7) or alta-neighbors >= 1) and media?)
+          [ setStay ] ] ] ]
+
+;; Clase alta
+  ask patches
+    [ ifelse ((baja-neighbors >= 2) and alta?)
+      [ set ingresos ingresos - 1100000
+        set servicios servicios - 4
+        set densidad densidad - 4
+        setTransitionValue ]
+      [ ifelse ((media-neighbors <= 4 or alta-neighbors >= 2) and alta?)
+        [ setStay ]
+        [ if ((media-neighbors >= 3 or baja-neighbors >= 3) and alta?)
+          [ set ingresos ingresos - 800000
+            set servicios servicios - 3
+            set densidad densidad - 3
+            setTransitionValue ] ] ] ]
+
 end
 
-to politica-pepenismo
-  set politicas-ingresos politicas-ingresos * 2
-  set politicas-servicios politicas-servicios * 2
-  set politicas-densidad politicas-densidad * 2
+to politica-empobrecimiento
+  ;; Clase baja
+
+  ask patches
+    [ ifelse ((baja-neighbors >= 3 or media-neighbors <= 5) and baja?)
+      [ setStay ]
+      [ ifelse ((media-neighbors >= 1 or baja-neighbors <= 6) and baja?)
+        [ set ingresos ingresos + 400000
+          set servicios servicios + 2
+          set densidad densidad + 2
+          setTransitionValue ]
+        [ if ((alta-neighbors >= 5) and baja?)
+          [ set ingresos ingresos + 1100000
+            set servicios servicios + 6
+            set densidad densidad + 6
+            setTransitionValue ] ] ] ]
+
+  ;; Clase media
+  ask patches
+    [ ifelse ((media-neighbors >= 4 and alta-neighbors >= 4) and media?)
+      [ set ingresos ingresos + 200000
+        set servicios servicios + 1
+        set densidad densidad + 1
+        setTransitionValue ]
+      [ ifelse (baja-neighbors >= 4 and media?)
+        [ set ingresos ingresos - 400000
+          set servicios servicios - 3
+          set densidad densidad - 3
+          setTransitionValue ]
+        [ if (((baja-neighbors <= 5 or media-neighbors >= 7) or alta-neighbors >= 1) and media?)
+          [ setStay ] ] ] ]
+
+  ;; Clase alta
+  ask patches
+    [ ifelse ((baja-neighbors >= 2) and alta?)
+      [ set ingresos ingresos - 1100000
+        set servicios servicios - 4
+        set densidad densidad - 4
+        setTransitionValue ]
+      [ ifelse ((media-neighbors <= 2 or alta-neighbors >= 2) and alta?)
+        [ setStay ]
+        [ if ((media-neighbors >= 2 or baja-neighbors >= 3) and alta?)
+          [ set ingresos ingresos - 800000
+            set servicios servicios - 3
+            set densidad densidad - 3
+            setTransitionValue ] ] ] ]
 end
 
-to ninguna
-  set politicas-ingresos politicas-ingresos * 1
-  set politicas-servicios politicas-servicios * 1
-  set politicas-densidad politicas-densidad * 1
+to politica-reactivacion
+  ;; Clase baja
+
+  ask patches
+    [ ifelse ((media-neighbors >= 3 and baja-neighbors <= 4) and baja?)
+      [ set ingresos ingresos + 400000
+        set servicios servicios + 2
+        set densidad densidad + 2
+        setTransitionValue ]
+      [ ifelse ((baja-neighbors >= 3 or media-neighbors <= 5) and baja?)
+        [ setStay ]
+        [ if ((alta-neighbors >= 5) and baja?)
+          [ set ingresos ingresos + 1100000
+            set servicios servicios + 6
+            set densidad densidad + 6
+            setTransitionValue ] ] ] ]
+
+    ask patches
+      [if (aleatorio < 9) and baja?
+        [ cell-media ]]
+
+  ;; Clase media
+  ask patches
+    [ ifelse ((media-neighbors >= 4 and alta-neighbors >= 4) and media?)
+      [ set ingresos ingresos + 200000
+        set servicios servicios + 1
+        set densidad densidad + 1
+        setTransitionValue ]
+      [ ifelse (baja-neighbors >= 5 and media?)
+        [ set ingresos ingresos - 400000
+          set servicios servicios - 3
+          set densidad densidad - 3
+          setTransitionValue ]
+        [ if (((baja-neighbors <= 5 or media-neighbors >= 7) or alta-neighbors >= 1) and media?)
+          [ setStay ] ] ] ]
+
+  ;; Clase alta
+  ask patches
+    [ ifelse ((baja-neighbors >= 2) and alta?)
+      [ set ingresos ingresos - 1100000
+        set servicios servicios - 4
+        set densidad densidad - 4
+        setTransitionValue ]
+      [ ifelse ((media-neighbors <= 4 or alta-neighbors >= 2) and alta?)
+        [ setStay ]
+        [ if ((media-neighbors >= 3 or baja-neighbors >= 3) and alta?)
+          [ set ingresos ingresos - 800000
+            set servicios servicios - 3
+            set densidad densidad - 3
+            setTransitionValue ] ] ] ]
 end
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;ASIGNACION DE CLASES;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -342,22 +463,22 @@ to assign-class-based-on-attributes
       set alta? false
       set pcolor pink + 1
     ]
-    if transition-value <= 1 [
+    if transition-value = 0 [
       cell-death
     ]
-    if transition-value = 100 [
+    if transition-value = -1 [
       cell-centro
     ]
-    if transition-value = 101 [
+    if transition-value = -2 [
       cell-parqueRecreativo
     ]
-    if transition-value = 102 [
+    if transition-value = -3 [
       cell-industria
     ]
-    if transition-value = 103 [
+    if transition-value = -4 [
       cell-colegio
     ]
-    if transition-value = 104 [
+    if transition-value = -5 [
       cell-hospital
     ]
   ]
@@ -400,6 +521,8 @@ to transicionClasesCercaSevicios
             [ cell-alta ] ] ] ]
 end
 
+
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;EJECUCION;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 ;;Actualizar la etiqueta con la información del parche
@@ -414,17 +537,16 @@ to go
   setterClasesYServicios
 
 ;;Ejecucion de las reglas de transicion
-  transicionClases
 
 ;; Procedimientos para el switch de politica
   if (politica = "Ninguna")
-    [ ninguna ]
-  if (politica = "peperonismo")
+    [ transicionClases]
+  if (politica = "Peperonismo")
     [ politica-peperonismo ]
- if (politica = "pepenismo")
-   [ politica-pepenismo ]	
-  if (politica = "pepecismo")
-    [ politica-pepecismo ]
+ if (politica = "Empobrecimiento")
+    [ politica-empobrecimiento ]	
+  if (politica = "Reactivacion")
+    [ politica-reactivacion ]
 
 ;;Ejecucion de las reglas de transicion de los servicios
   transicionClasesCercaSevicios
@@ -460,7 +582,7 @@ GRAPHICS-WINDOW
 1
 1
 ticks
-15.0
+10.0
 
 SLIDER
 150
@@ -682,11 +804,11 @@ info-servicios
 CHOOSER
 14
 119
-141
+149
 164
 POLITICA
 POLITICA
-"ninguna" "peperonismo" "pepenismo" "pepecismo"
+"Ninguna" "Peperonismo" "Empobrecimiento" "Reactivacion"
 0
 
 @#$#@#$#@
