@@ -59,7 +59,7 @@ En la interfaz de NetLogo, también verás una lista desplegable de politicas (`
 
 **2. Configurar las Políticas:**
 
-Ajustar el interruptor de políticas (`Seleccinador`) en `Niguna` para dar un buen desarrollo inicial a la sociedad.
+Ajustar el interruptor de políticas (`Seleccinador`) en `Ninguna` para dar un buen desarrollo inicial a la sociedad.
 
 - `Peperonismo`: Estancar el desarrllo.
 - `Empobrecimiento`: Promover el crecimiento de la clase baja.
@@ -76,7 +76,7 @@ Ajustar el interruptor de políticas (`Seleccinador`) en `Niguna` para dar un bu
 
 **5. Iniciar infolabel**
 
-Selecciona el botón `Infolaber` para usar el mouse encima de una célula y ver la información relevante sobre la misma como, `ingresos`, `densidad` y `servicios`.
+Selecciona el botón `Infolabel` para usar el mouse encima de una célula y ver la información relevante sobre la misma como, `ingresos`, `densidad` y `servicios`.
 
 ## Requisitos del Sistema
 
