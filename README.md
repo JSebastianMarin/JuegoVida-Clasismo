@@ -6,7 +6,7 @@ Este proyecto es una simulación de una sociedad utilizando un autómata celular
 
 En este proyecto, cada célula del autómata tiene los siguientes atributos:
 
-- `color`: Indica la clase social a la que pertenece la celula.
+- `color`: Indica la clase social a la que pertenece la célula.
 - `alta?`: Indica si pertenece a la clase alta.
 - `media?`: Indica si pertenece a la clase media.
 - `baja?`: Indica si pertenece a la clase baja.
@@ -14,9 +14,9 @@ En este proyecto, cada célula del autómata tiene los siguientes atributos:
 - `colegio?`: Indica si es una célula de tipo colegio.
 - `centro?`: Indica si es una célula de tipo centro.
 - `recreativo?`: Indica si es una célula de tipo recreativo.
-- `ingresos`: Ingresos de la celula.
-- `servicios`: Accesibilidad a servicios de la celula.
-- `densidad`: Densidad poblacional de la celula.
+- `ingresos`: Ingresos de la célula.
+- `servicios`: Accesibilidad a servicios de la célula.
+- `densidad`: Densidad poblacional de la célula.
 - `transition-value`: Valor de transición para determinar clase social.
 
 ## Instrucciones de Uso
@@ -44,12 +44,12 @@ En la interfaz de NetLogo, verás tres botones:
 
 **4. Lista desplegable de Políticas (`Seleccionador`):**
 
-En la interfaz de NetLogo, también verás una lista desplegable de politicas (`Seleccionador`).
+En la interfaz de NetLogo, también verás una lista desplegable de políticas (`Seleccionador`).
 - Si el interruptor está en `Ninguna`, se activarán reglas que permiten el desarrollo de la sociedad, promoviendo la expansión de la clase alta y media.
-- Si el seleccionador está en `Peperonismo`, se activarán reglas que disminuiran la posibilidad de escalar de clase social generando un estancamiento en la evolución.
-- Si el seleccionador está en `Empobrecimiento` se usarán reglas que haran más dificil la transicion a clases sociales superiores y es altamente probable que todos se vuelvan pobres.
-- Si el seleccionador está en `Reactivación` se usarán reglas que haran facil el crecimiento de la clase baja a clase media.
-- Cambiar el estado del selecionador en medio de una iteración frenara o acelerara la velocidad a la que se desarrolla la sociedad teniendo en cuenta las reglas asociadas al mismo.
+- Si el seleccionador está en `Peperonismo`, se activarán reglas que disminuirán la posibilidad de escalar de clase social generando un estancamiento en la evolución.
+- Si el seleccionador está en `Empobrecimiento` se usarán reglas que harán más difícil la transición a clases sociales superiores y es altamente probable que todos se vuelvan pobres.
+- Si el seleccionador está en `Reactivación` se usarán reglas que harán fácil el crecimiento de la clase baja a clase media.
+- Cambiar el estado del seleccionador en medio de una iteración frenara o acelerara la velocidad a la que se desarrolla la sociedad teniendo en cuenta las reglas asociadas al mismo.
 
 ## Ejemplo de Uso
 
@@ -59,9 +59,9 @@ En la interfaz de NetLogo, también verás una lista desplegable de politicas (`
 
 **2. Configurar las Políticas:**
 
-Ajustar el interruptor de políticas (`Seleccinador`) en `Ninguna` para dar un buen desarrollo inicial a la sociedad.
+Ajustar el interruptor de políticas (`Seleccionador`) en `Ninguna` para dar un buen desarrollo inicial a la sociedad.
 
-- `Peperonismo`: Estancar el desarrllo.
+- `Peperonismo`: Estancar el desarrollo.
 - `Empobrecimiento`: Promover el crecimiento de la clase baja.
 - `Reactivación`: Promover el desarrollo a la clase media.
 
@@ -89,6 +89,6 @@ Para cualquier pregunta o sugerencia, por favor abre un issue en GitHub o contac
 
 ### Integrantes del grupo
 
-- Juan Sebastian Marin Serna / @JSebastianMarin
-- Juan Pablo Idarraga Pabón / @JuanPidarraga
+- Juan Sebastián Marín Serna / @JSebastianMarin
+- Juan Pablo Idárraga Pabón / @JuanPidarraga
 - Jose Luis Ramos Arango / @RamSterB
