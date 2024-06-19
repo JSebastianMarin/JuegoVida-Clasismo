@@ -756,7 +756,7 @@ BUTTON
 220
 844
 260
-Iniciar info-label
+go-infolabel
 go-label
 T
 1
