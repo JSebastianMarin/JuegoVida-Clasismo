@@ -42,12 +42,14 @@ En la interfaz de NetLogo, verás tres botones:
 - `go-once`: Presiona este botón para avanzar una transición a la vez y observar los cambios paso a paso.
 - `go-forever`: Presiona este botón para ejecutar la simulación continuamente y observar las transiciones automáticas.
 
-**4. Interruptor de políticas (`switch`):**
+**4. Lista desplegable de Políticas (`Seleccionador`):**
 
-- En la interfaz de NetLogo, también verás un interruptor de políticas (`switch`).
-- Si el interruptor está en `ON`, se activarán reglas que permiten el desarrollo de la sociedad, promoviendo la expansión de la clase alta y media.
-- Si el interruptor está en `OFF`, se activarán reglas que disminuiran la posibilidad de escalar de clase social.
-- Cambiar el estado del interruptor en medio de una iteración frenara o acelerara la velocidad a la que se desarrolla la sociedad teniendo en cuenta las reglas asociadas al on y off.
+En la interfaz de NetLogo, también verás una lista desplegable de politicas (`Seleccionador`).
+- Si el interruptor está en `Ninguna`, se activarán reglas que permiten el desarrollo de la sociedad, promoviendo la expansión de la clase alta y media.
+- Si el seleccionador está en `Peperonismo`, se activarán reglas que disminuiran la posibilidad de escalar de clase social generando un estancamiento en la evolución.
+- Si el seleccionador está en `Empobrecimiento` se usarán reglas que haran más dificil la transicion a clases sociales superiores y es altamente probable que todos se vuelvan pobres.
+- Si el seleccionador está en `Reactivación` se usarán reglas que haran facil el crecimiento de la clase baja a clase media.
+- Cambiar el estado del selecionador en medio de una iteración frenara o acelerara la velocidad a la que se desarrolla la sociedad teniendo en cuenta las reglas asociadas al mismo.
 
 ## Ejemplo de Uso
 
@@ -57,10 +59,11 @@ En la interfaz de NetLogo, verás tres botones:
 
 **2. Configurar las Políticas:**
 
-Ajustar el interruptor de políticas (`switch`) según el comportaiento deseado
+Ajustar el interruptor de políticas (`Seleccinador`) en `Niguna` para dar un buen desarrollo inicial a la sociedad.
 
-- `ON`: Promueve la expansión de la clase media y alta.
-- `OFF`: Disminuye la probabilidad de subir de clase social.
+- `Peperonismo`: Estancar el desarrllo.
+- `Empobrecimiento`: Promover el crecimiento de la clase baja.
+- `Reactivación`: Promover el desarrollo a la clase media.
 
 **3. Ejecutar Transiciones Manualmente:**
 
@@ -70,6 +73,10 @@ Ajustar el interruptor de políticas (`switch`) según el comportaiento deseado
 
 - Haz clic en `go-forever` para ver la evolución continua de la sociedad.
 - Cambia el interruptor a voluntad si quieres disminuir o aumentar la velocidad a la que se expande las clases sociales media y alta.
+
+**5. Iniciar infolabel**
+
+Selecciona el botón `Infolaber` para usar el mouse encima de una célula y ver la información relevante sobre la misma como, `ingresos`, `densidad` y `servicios`.
 
 ## Requisitos del Sistema
 
