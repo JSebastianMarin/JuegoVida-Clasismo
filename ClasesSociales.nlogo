@@ -814,51 +814,55 @@ POLITICA
 @#$#@#$#@
 ## WHAT IS IT?
 
-Este proyecto es una simulación de una sociedad utilizando un autómata celular. 
-El modelo simula diferentes niveles de ingresos dentro de una comunidad, visualizando cada celda con un color representativo. 
-Además, hay celdas especiales que representan hospitales, colegios, centros recreativos y otros puntos de interés distribuidos por el mapa.
+En este proyecto, desarrollamos una simulación de un autómata celular utilizando NetLogo para modelar una sociedad con diferentes niveles de ingresos. Cada celda en el autómata representa un individuo o un hogar, con atributos que indican su clase de ingresos (baja, media, alta) y la proximidad a servicios esenciales como hospitales, escuelas y centros recreativos. La simulación permite cambios de políticas dinámicos que influyen en el desarrollo de la sociedad, promoviendo el crecimiento de la clase media o causando el declive de la clase alta.
+
+El objetivo principal de este proyecto es explorar el impacto de diferentes políticas en la estratificación social y el desarrollo comunitario. Al visualizar los efectos de estas políticas, la simulación proporciona ideas sobre los posibles resultados de diversas estrategias socioeconómicas.
+
 
 ## HOW IT WORKS
 
-(what rules the agents use to create the overall behavior of the model)
+El modelo comienza con una población inicial de celdas que representan diferentes clases sociales. Cada celda tiene un nivel de ingresos, servicios y densidad poblacional.
+
+En la interfaz de NetLogo, también verás una lista desplegable de políticas (`Seleccionador`).
+
+    - Si el interruptor está en `Ninguna`, se activarán reglas que permiten el desarrollo de la sociedad, promoviendo la expansión de la clase alta y media.
+
+- Si el seleccionador está en `Peperonismo`, se activarán reglas que disminuirán la posibilidad de escalar de clase social generando un estancamiento en la evolución.
+
+- Si el seleccionador está en `Empobrecimiento` se usarán reglas que harán más difícil la transición a clases sociales superiores y es altamente probable que todos se vuelvan pobres.
+
+- Si el seleccionador está en `Reactivación` se usarán reglas que harán fácil el crecimiento de la clase baja a clase media.
+
+- Cambiar el estado del seleccionador en medio de una iteración frenara o acelerara la velocidad a la que se desarrolla la sociedad teniendo en cuenta las reglas asociadas al mismo.
 
 ## HOW TO USE IT
 
-1. **Generar la Población Inicial:**
+**1. Generar la Población Inicial:**
 
-    - Haz clic en setup-random.
+- Haz clic en `setup-random`.
 
-2. **Ejecutar Transiciones Manualmente:**
+**2. Configurar las Políticas:**
 
-    - Haz clic en go-once para observar la evolución de la sociedad paso a paso.
+Ajustar el interruptor de políticas (`Seleccionador`) en `Ninguna` para dar un buen desarrollo inicial a la sociedad.
 
-3. **Ejecutar Transiciones Automáticamente:**
+    - `Peperonismo`: Estancar el desarrollo.
 
-    - Haz clic en go-forever para ver la evolución continua de la sociedad.
+- `Empobrecimiento`: Promover el crecimiento de la clase baja.
 
-## THINGS TO NOTICE
+- `Reactivación`: Promover el desarrollo a la clase media.
 
-(suggested things for the user to notice while running the model)
+**3. Ejecutar Transiciones Manualmente:**
 
-## THINGS TO TRY
+    - Haz clic en `go-once` para observar la evolución de la sociedad paso a paso.
 
-(suggested things for the user to try to do (move sliders, switches, etc.) with the model)
+**4. Ejecutar Transiciones Automáticamente:**
 
-## EXTENDING THE MODEL
+    - Haz clic en `go-forever` para ver la evolución continua de la sociedad.
+- Cambia el interruptor a voluntad si quieres disminuir o aumentar la velocidad a la que se expande las clases sociales media y alta.
 
-(suggested things to add or change in the Code tab to make the model more complicated, detailed, accurate, etc.)
+**5. Iniciar infolabel**
 
-## NETLOGO FEATURES
-
-(interesting or unusual features of NetLogo that the model uses, particularly in the Code tab; or where workarounds were needed for missing features)
-
-## RELATED MODELS
-
-(models in the NetLogo Models Library and elsewhere which are of related interest)
-
-## CREDITS AND REFERENCES
-
-(a reference to the model's URL on the web if it has one, as well as any other necessary credits, citations, and links)
+Selecciona el botón `go-infolabel` para usar el mouse encima de una célula y ver la información relevante sobre la misma como, `ingresos`, `densidad` y `servicios`.
 @#$#@#$#@
 default
 true
