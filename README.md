@@ -92,4 +92,4 @@ Para cualquier pregunta o sugerencia, por favor abre un issue en GitHub o contac
 
 - Juan Sebastián Marín Serna / @JSebastianMarin
 - Juan Pablo Idárraga Pabón / @JuanPidarraga
-- Jose Luis Ramos Arango / @RamSterB
+- Jose Luis Ramos Arango   / @RamSterB
