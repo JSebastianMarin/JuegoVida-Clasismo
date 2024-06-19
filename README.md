@@ -36,11 +36,12 @@ git clone https://github.com/JSebastianMarin/JuegoVida-Clasismo
 
 **3. Configuración inicial y ejecución:**
 
-En la interfaz de NetLogo, verás tres botones:
+En la interfaz de NetLogo, verás cuatro botones:
 
 - `setup-random`: Presiona este botón primero para generar la población inicial y distribuir las celdas especiales en el mapa.
 - `go-once`: Presiona este botón para avanzar una transición a la vez y observar los cambios paso a paso.
 - `go-forever`: Presiona este botón para ejecutar la simulación continuamente y observar las transiciones automáticas.
+- `go-infolabel`: Presiona este botón para habilitar la opción de ver la información de la célula bajo el ratón en los monitores de atributos.
 
 **4. Lista desplegable de Políticas (`Seleccionador`):**
 
@@ -76,7 +77,7 @@ Ajustar el interruptor de políticas (`Seleccionador`) en `Ninguna` para dar un 
 
 **5. Iniciar infolabel**
 
-Selecciona el botón `Infolabel` para usar el mouse encima de una célula y ver la información relevante sobre la misma como, `ingresos`, `densidad` y `servicios`.
+Selecciona el botón `go-infolabel` para usar el mouse encima de una célula y ver la información relevante sobre la misma como, `ingresos`, `densidad` y `servicios`.
 
 ## Requisitos del Sistema
 
