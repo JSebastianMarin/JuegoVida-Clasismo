@@ -299,14 +299,14 @@ to politica-peperonismo
     [ ifelse ((baja-neighbors >= 3 or media-neighbors <= 5) and baja?)
       [ setStay ]
       [ ifelse ((media-neighbors >= 1 or baja-neighbors <= 4) and baja?)
-        [ set ingresos ingresos + 400000
-          set servicios servicios + 2
-          set densidad densidad + 2
+        [ set ingresos ingresos + 200000
+          set servicios servicios + 1
+          set densidad densidad + 1
           setTransitionValue ]
         [ if ((alta-neighbors >= 5) and baja?)
-          [ set ingresos ingresos + 1100000
-            set servicios servicios + 6
-            set densidad densidad + 6
+          [ set ingresos ingresos + 550000
+            set servicios servicios + 3
+            set densidad densidad + 3
             setTransitionValue ] ] ] ]
 
 ;; Clase media
@@ -317,9 +317,9 @@ to politica-peperonismo
         set densidad densidad + 1
         setTransitionValue ]
       [ ifelse (baja-neighbors >= 7 and media?)
-        [ set ingresos ingresos - 400000
-          set servicios servicios - 3
-          set densidad densidad - 3
+        [ set ingresos ingresos - 200000
+          set servicios servicios - 2
+          set densidad densidad - 2
           setTransitionValue ]
         [ if (((baja-neighbors <= 5 or media-neighbors >= 7) or alta-neighbors >= 1) and media?)
           [ setStay ] ] ] ]
@@ -327,16 +327,16 @@ to politica-peperonismo
 ;; Clase alta
   ask patches
     [ ifelse ((baja-neighbors >= 2) and alta?)
-      [ set ingresos ingresos - 1100000
-        set servicios servicios - 4
-        set densidad densidad - 4
+      [ set ingresos ingresos - 550000
+        set servicios servicios - 2
+        set densidad densidad - 2
         setTransitionValue ]
       [ ifelse ((media-neighbors <= 4 or alta-neighbors >= 2) and alta?)
         [ setStay ]
         [ if ((media-neighbors >= 3 or baja-neighbors >= 3) and alta?)
-          [ set ingresos ingresos - 800000
-            set servicios servicios - 3
-            set densidad densidad - 3
+          [ set ingresos ingresos - 400000
+            set servicios servicios - 2
+            set densidad densidad - 2
             setTransitionValue ] ] ] ]
 
 end
@@ -348,14 +348,14 @@ to politica-empobrecimiento
     [ ifelse ((baja-neighbors >= 3 or media-neighbors <= 5) and baja?)
       [ setStay ]
       [ ifelse ((media-neighbors >= 1 or baja-neighbors <= 6) and baja?)
-        [ set ingresos ingresos + 400000
-          set servicios servicios + 2
-          set densidad densidad + 2
+        [ set ingresos ingresos + 200000
+          set servicios servicios + 1
+          set densidad densidad + 1
           setTransitionValue ]
         [ if ((alta-neighbors >= 5) and baja?)
-          [ set ingresos ingresos + 1100000
-            set servicios servicios + 6
-            set densidad densidad + 6
+          [ set ingresos ingresos + 550000
+            set servicios servicios + 3
+            set densidad densidad + 3
             setTransitionValue ] ] ] ]
 
   ;; Clase media
@@ -366,9 +366,9 @@ to politica-empobrecimiento
         set densidad densidad + 1
         setTransitionValue ]
       [ ifelse (baja-neighbors >= 4 and media?)
-        [ set ingresos ingresos - 400000
-          set servicios servicios - 3
-          set densidad densidad - 3
+        [ set ingresos ingresos - 200000
+          set servicios servicios - 2
+          set densidad densidad - 2
           setTransitionValue ]
         [ if (((baja-neighbors <= 5 or media-neighbors >= 7) or alta-neighbors >= 1) and media?)
           [ setStay ] ] ] ]
@@ -376,16 +376,16 @@ to politica-empobrecimiento
   ;; Clase alta
   ask patches
     [ ifelse ((baja-neighbors >= 2) and alta?)
-      [ set ingresos ingresos - 1100000
-        set servicios servicios - 4
-        set densidad densidad - 4
+      [ set ingresos ingresos - 550000
+        set servicios servicios - 2
+        set densidad densidad - 2
         setTransitionValue ]
       [ ifelse ((media-neighbors <= 2 or alta-neighbors >= 2) and alta?)
         [ setStay ]
         [ if ((media-neighbors >= 2 or baja-neighbors >= 3) and alta?)
-          [ set ingresos ingresos - 800000
-            set servicios servicios - 3
-            set densidad densidad - 3
+          [ set ingresos ingresos - 400000
+            set servicios servicios - 2
+            set densidad densidad - 2
             setTransitionValue ] ] ] ]
 end
 
@@ -394,16 +394,16 @@ to politica-reactivacion
 
   ask patches
     [ ifelse ((media-neighbors >= 3 and baja-neighbors <= 4) and baja?)
-      [ set ingresos ingresos + 400000
+      [ set ingresos ingresos + 200000
         set servicios servicios + 2
         set densidad densidad + 2
         setTransitionValue ]
       [ ifelse ((baja-neighbors >= 3 or media-neighbors <= 5) and baja?)
         [ setStay ]
         [ if ((alta-neighbors >= 5) and baja?)
-          [ set ingresos ingresos + 1100000
-            set servicios servicios + 6
-            set densidad densidad + 6
+          [ set ingresos ingresos + 550000
+            set servicios servicios + 3
+            set densidad densidad + 3
             setTransitionValue ] ] ] ]
 
     ask patches
@@ -418,9 +418,9 @@ to politica-reactivacion
         set densidad densidad + 1
         setTransitionValue ]
       [ ifelse (baja-neighbors >= 5 and media?)
-        [ set ingresos ingresos - 400000
-          set servicios servicios - 3
-          set densidad densidad - 3
+        [ set ingresos ingresos - 200000
+          set servicios servicios - 2
+          set densidad densidad - 2
           setTransitionValue ]
         [ if (((baja-neighbors <= 5 or media-neighbors >= 7) or alta-neighbors >= 1) and media?)
           [ setStay ] ] ] ]
@@ -428,16 +428,16 @@ to politica-reactivacion
   ;; Clase alta
   ask patches
     [ ifelse ((baja-neighbors >= 2) and alta?)
-      [ set ingresos ingresos - 1100000
-        set servicios servicios - 4
-        set densidad densidad - 4
+      [ set ingresos ingresos - 550000
+        set servicios servicios - 2
+        set densidad densidad - 2
         setTransitionValue ]
       [ ifelse ((media-neighbors <= 4 or alta-neighbors >= 2) and alta?)
         [ setStay ]
         [ if ((media-neighbors >= 3 or baja-neighbors >= 3) and alta?)
-          [ set ingresos ingresos - 800000
-            set servicios servicios - 3
-            set densidad densidad - 3
+          [ set ingresos ingresos - 400000
+            set servicios servicios - 2
+            set densidad densidad - 2
             setTransitionValue ] ] ] ]
 end
 
